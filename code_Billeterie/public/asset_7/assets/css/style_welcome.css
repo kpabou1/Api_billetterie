@@ -1,0 +1,75 @@
+
+
+
+.annonces-global {
+    background-image: url("{{ asset('asset_7/assets/img/world-dotted-map.png') }}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 60px 0;
+}
+
+.ticker-container {
+    background-color: green;
+    color: white;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 5px 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.ticker-text {
+    display: inline-block;
+    animation: ticker 55s linear infinite;
+}
+
+@keyframes ticker {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.carousel-item {
+    transition: transform 0.5s ease, opacity 0.5s ease-in-out;
+}
+
+.carousel-inner .active {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+.card.ribbon-box .ribbon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 1;
+}
+
+.card.ribbon-box .ribbon .trending-ribbon {
+    background: #00aaff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.card.ribbon-box .card-body {
+    position: relative;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.card.ribbon-box .card-body:hover {
+    transform: translateY(-10px);
+}
