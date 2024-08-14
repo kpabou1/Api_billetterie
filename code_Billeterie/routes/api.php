@@ -37,3 +37,8 @@ Route::post('/orders/intent/{intent}/validate', [OrderController::class, 'valida
 
 // (Bonus) Route pour consulter toutes les commandes effectuées par un client
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+
+Route::get('/filter-events', [EventController::class, 'filter_evenements'])->name('events.filter');
+
+
+Route::get('/events/{eventId}/tickets', [EventController::class, 'getTicketsByEvent'])->name('event.tickets');

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('Modifier une annonce'))
+@section('title', __('Éditer une annonce'))
 
 @section('content')
 
@@ -10,45 +10,150 @@
             <a href="{{ route('dashboard') }}" class="text-primary hover:underline">Dashboard</a>
         </li>
         <li class="before:content-['/'] ltr:before:mr-1 rtl:before:ml-1">
-            <a href="{{ route('annonces.index') }}" class="text-primary hover:underline">Annonces</a>
+            <a href="{{ route('events_billets.index') }}" class="text-primary hover:underline">Annonces</a>
         </li>
         <li class="before:content-['/'] ltr:before:mr-1 rtl:before:ml-1">
-            <span>{{ __('Modifier une annonce') }}</span>
+            <span>{{ __('Éditer un événement') }}</span>
         </li>
     </ul>
     <br>
     <!-- End page title -->
 
     @include('flash-message')
+    <div class="container mx-auto p-8">
+        <div class="bg-white p-8 rounded shadow-md">
+            <h2 class="text-3xl font-bold mb-8 text-center">Éditer l'événement</h2>
 
-    <div class="card">
-        <div class="card-body">
-            <form class="space-y-5" action="{{ route('annonces.update', $annonce->id) }}" method="POST"
+            <div class="mb-8">
+                <div class="flex justify-between">
+                    <div class="step-item" id="step1-indicator">
+                        <div
+                            class="step-number bg-red-500 text-white rounded-full w-10 h-10 flex items-center justify-center mx-auto">
+                            1</div>
+                        <div class="step-label mt-2 text-center text-red-500">Info de base</div>
+                    </div>
+                    <div class="step-item" id="step2-indicator">
+                        <div
+                            class="step-number bg-gray-300 text-gray-600 rounded-full w-10 h-10 flex items-center justify-center mx-auto">
+                            2</div>
+                        <div class="step-label mt-2 text-center text-gray-600">Date, lieu et images</div>
+                    </div>
+                    <div class="step-item" id="step3-indicator">
+                        <div
+                            class="step-number bg-gray-300 text-gray-600 rounded-full w-10 h-10 flex items-center justify-center mx-auto">
+                            3</div>
+                        <div class="step-label mt-2 text-center text-gray-600">Tickets et infoline</div>
+                    </div>
+                    <div class="step-item" id="step4-indicator">
+                        <div
+                            class="step-number bg-gray-300 text-gray-600 rounded-full w-10 h-10 flex items-center justify-center mx-auto">
+                            4</div>
+                        <div class="step-label mt-2 text-center text-gray-600">Publication</div>
+                    </div>
+                </div>
+            </div>
+
+            <form action="{{ route('events_billets.update', $event->event_id) }}" method="POST"
                 enctype="multipart/form-data">
                 @csrf
-                @method('PATCH')
+                @method('PUT')
 
-                <div class="flex flex-wrap -mx-3">
-                    <div class="w-full px-3">
-                        <div class="w-full px-3">
-                            <div class="form-group">
-                                <label for="objet_marche">{{ __('Objet du Marché') }} <span
-                                        class="text-red-500">*</span></label>
-                                <input type="text" name="objet_marche" class="form-input"
-                                    value="{{ old('objet_marche', $annonce->objet_marche) }}">
-                                @error('objet_marche')
-                                    <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
+                <!-- Step 1: Info de base -->
+                <div class="step-content" id="step1-content">
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Catégorie <span class="text-red-500">*</span></label>
+                        <select name="event_category" class="w-full mt-2 p-2 border rounded">
+                            <option value="Autre" {{ $event->category == 'Autre' ? 'selected' : '' }}>Autre</option>
+                            <option value="Concert-Spectacle"
+                                {{ $event->category == 'Concert-Spectacle' ? 'selected' : '' }}>Concert-Spectacle</option>
+                            <option value="Diner Gala" {{ $event->category == 'Diner Gala' ? 'selected' : '' }}>Diner Gala
+                            </option>
+                            <option value="Festival" {{ $event->category == 'Festival' ? 'selected' : '' }}>Festival
+                            </option>
+                            <option value="Formation" {{ $event->category == 'Formation' ? 'selected' : '' }}>Formation
+                            </option>
+                        </select>
+                        @error('event_category')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
                             </div>
-                        </div>
+                        @enderror
                     </div>
-                    <div class="w-full px-3">
-                        <div class="form-group">
-                            <label for="corps_annonce">{{ __('Corps de l\'annonce') }}</label>
-                            <textarea id="corps_annonce" name="corps_annonce" class="form-input @error('corps_annonce') is-invalid @enderror">{{ old('corps_annonce', $annonce->corps_annonce) }}</textarea>
-                            @error('corps_annonce')
+
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Titre de l'évènement <span class="text-red-500">*</span></label>
+                        <input type="text" name="event_title" class="w-full mt-2 p-2 border rounded" maxlength="30"
+                            value="{{ old('event_title', $event->event_title) }}" required>
+                        @error('event_title')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Description textuelle</label>
+                        <textarea name="event_description" class="w-full mt-2 p-2 border rounded">{{ old('event_description', $event->description) }}</textarea>
+                        @error('event_description')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" class="bg-red-500 text-white px-4 py-2 rounded"
+                            onclick="nextStep(2)">Suivant</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Date, lieu et images -->
+                <div class="step-content hidden" id="step2-content">
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Date & Heure <span class="text-red-500">*</span></label>
+                        <input type="datetime-local" name="event_date" class="w-full mt-2 p-2 border rounded"
+                            value="{{ old('event_date', $event->event_date) }}" required>
+                        @error('event_date')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Ville<span class="text-red-500">*</span></label>
+                        <input type="text" name="event_city" class="w-full mt-2 p-2 border rounded"
+                            value="{{ old('event_city', $event->event_city) }}" required>
+                        @error('event_city')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Adresse complète <span class="text-red-500">*</span></label>
+                        <input type="text" name="event_address" class="w-full mt-2 p-2 border rounded"
+                            value="{{ old('event_address', $event->event_address) }}" required>
+                        @error('event_address')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Image principale <span class="text-red-500">*</span></label>
+                        <div class="relative w-full h-48 bg-gray-100 border rounded flex items-center justify-center">
+                            <img id="imagePreview"
+                                src="{{ $event->image ? asset('storage/' . $event->image) : 'https://via.placeholder.com/150' }}"
+                                alt="Image Preview" class="max-h-full max-w-full">
+                            <input type="file" name="event_image"
+                                class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+                                onchange="previewImage(event)">
+                            <div class="absolute top-2 right-2 bg-white p-1 rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 20h9M16.5 3.5a2.121 2.121 0 010 3L8.5 14.5l-2 2-3-3 2-2 8-8a2.121 2.121 0 013 0z" />
+                                </svg>
+                            </div>
+                            @error('event_image')
                                 <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
                                     {{ $message }}
                                 </div>
@@ -56,367 +161,128 @@
                         </div>
                     </div>
 
-                    <br>
+                    <script>
+                        function previewImage(event) {
+                            const reader = new FileReader();
+                            reader.onload = function() {
+                                const output = document.getElementById('imagePreview');
+                                output.src = reader.result;
+                            }
+                            reader.readAsDataURL(event.target.files[0]);
+                        }
+                    </script>
 
-                    <div class="w-full px-3 mb-6">
-                        <div class="form-group">
-                            <label for="categorie"
-                                class="block text-gray-700 text-sm font-bold mb-2">{{ __('Type de marché') }} <span
-                                    class="text-red-500">*</span></label>
-                            <select id="categorie" name="categorie"
-                                class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-                                @foreach ($categoriemarches as $categorie)
-                                    <option value="{{ $categorie->id }}"
-                                        {{ old('categorie', $annonce->categorie_id) == $categorie->id ? 'selected' : '' }}>
-                                        {{ $categorie->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('categorie')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded mt-2">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+                    <div class="flex justify-between">
+                        <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+                            onclick="prevStep(1)">Précédent</button>
+                        <button type="button" class="bg-red-500 text-white px-4 py-2 rounded"
+                            onclick="nextStep(3)">Suivant</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Tickets -->
+                <div class="step-content hidden" id="step3-content">
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Prix des billets <span class="text-red-500">*</span></label>
+                        <input type="number" name="event_ticket_price" class="w-full mt-2 p-2 border rounded"
+                            value="{{ old('event_ticket_price', $event->ticket_price) }}" required>
+                        @error('event_ticket_price')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Lien d'achat <span class="text-red-500">*</span></label>
+                        <input type="url" name="event_ticket_link" class="w-full mt-2 p-2 border rounded"
+                            value="{{ old('event_ticket_link', $event->ticket_link) }}" required>
+                        @error('event_ticket_link')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Infoline <span class="text-red-500">*</span></label>
+                        <input type="tel" name="event_infoline" class="w-full mt-2 p-2 border rounded"
+                            value="{{ old('event_infoline', $event->infoline) }}" required>
+                        @error('event_infoline')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
 
-
-
-                    <div class="w-full md:w-1/3 px-3">
-                        <div class="form-group">
-                            <label for="nom_autorite_contractante">{{ __('Nom Autorité Contractante') }} <span
-                                    class="text-red-500">*</span></label>
-                            <input type="text" name="nom_autorite_contractante"
-                                class="form-input @error('nom_autorite_contractante') is-invalid @enderror"
-                                value="{{ old('nom_autorite_contractante', $annonce->nom_autorite_contractante) }}"
-                                required>
-                            @error('nom_autorite_contractante')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+                    <div class="flex justify-between">
+                        <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+                            onclick="prevStep(2)">Précédent</button>
+                        <button type="button" class="bg-red-500 text-white px-4 py-2 rounded"
+                            onclick="nextStep(4)">Suivant</button>
                     </div>
-                    <div class="w-full md:w-1/3 px-3">
-                        <div class="form-group">
-                            <label for="image_autorite_contractante">{{ __('Logo Autorité Contractante') }}</label>
-                            @if ($annonce->image_autorite_contractante)
-                                <div class="mb-2">
-                                    <img src="{{ asset('storage/' . $annonce->image_autorite_contractante) }}"
-                                        alt="{{ __('Image Autorité Contractante') }}" style="max-width: 200px;">
-                                </div>
-                            @endif
-                            <input type="file" name="image_autorite_contractante" accept="image/*"
-                                class="form-input @error('image_autorite_contractante') is-invalid @enderror">
-                            @error('image_autorite_contractante')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="w-full md:w-1/3 px-3">
-                            <div class="form-group">
-                                <label for="lieu_depot">{{ __('Lieu de Dépôt') }} <span
-                                        class="text-red-500">*</span></label>
-                                <input type="text" name="lieu_depot"
-                                    class="form-input @error('lieu_depot') is-invalid @enderror"
-                                    value="{{ old('lieu_depot', $annonce->lieu_depot) }}" required>
-                                @error('lieu_depot')
-                                    <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-                        <br>
+                </div>
 
-
-
-                        <div class="w-full px-3">
-                            <div class="form-group">
-                                <label for="adresse_autorite_contractante">{{ __('Adresse Autorité Contractante') }} <span
-                                        class="text-red-500">*</span></label>
-                                <textarea name="adresse_autorite_contractante"
-                                    class="form-input @error('adresse_autorite_contractante') is-invalid @enderror">{{ old('adresse_autorite_contractante', $annonce->adresse_autorite_contractante) }}</textarea>
-                                @error('adresse_autorite_contractante')
-                                    <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
+                <!-- Step 4: Publication -->
+                <div class="step-content hidden" id="step4-content">
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Statut de l'annonce <span class="text-red-500">*</span></label>
+                        <select name="event_status" class="w-full mt-2 p-2 border rounded" required>
+                            <option value="Publié" {{ $event->status == 'Publié' ? 'selected' : '' }}>Publié</option>
+                            <option value="Non Publié" {{ $event->status == 'Non Publié' ? 'selected' : '' }}>Non Publié
+                            </option>
+                        </select>
+                        @error('event_status')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
                             </div>
-                        </div>
-
-                        <div class="w-full px-3">
-                            <div class="form-group">
-                                <label for="garantie_soumission">{{ __('Garantie de Soumission') }} <span
-                                        class="text-red-500">*</span></label>
-                                <textarea name="garantie_soumission" class="form-input @error('garantie_soumission') is-invalid @enderror">{{ old('garantie_soumission', $annonce->garantie_soumission) }}</textarea>
-                                @error('garantie_soumission')
-                                    <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="w-full md:w-1/3 px-3">
-                            <div class="form-group">
-                                <label for="date_publication">{{ __('Date de publication') }}</label>
-                                <input type="date" name="date_publication"
-                                    class="form-input @error('date_publication') is-invalid @enderror"
-                                    value="{{ old('date_publication', $annonce->date_publication) }}">
-                                @error('date_publication')
-                                    <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap -mx-3">
-                            <div class="form-group">
-                                <label>{{ __('Source de Financement') }}<span class="text-red-500">*</span></label>
-                                <div class="flex items-center space-x-4 mt-2">
-                                    <label class="flex items-center">
-                                        <input type="radio" name="sourcesfinance"
-                                            class="form-radio h-5 w-5 rounded-full text-blue-600"
-                                            value="{{ $sourcefinance[0]->id }}"
-                                            {{ old('sourcesfinance', $sourcefinance[0]->id) == $annonce->sourcesfinance_id ? 'checked' : '' }}>
-                                        <span class="ml-2">{{ $sourcefinance[0]->name }}</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="radio" id="sourcesfinance_id" name="sourcesfinance"
-                                            class="form-radio h-5 w-5 rounded-full text-blue-600"
-                                            value="{{ $sourcefinance[1]->id }}"
-                                            {{ old('sourcesfinance', $sourcefinance[1]->id) == $annonce->sourcesfinance_id ? 'checked' : '' }}>
-                                        <span class="ml-2">{{ $sourcefinance[1]->name }}</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="radio" id="autres" name="sourcesfinance"
-                                            class="form-radio h-5 w-5 rounded-full text-blue-600"
-                                            value="{{ $sourcefinance[2]->id }}"
-                                            {{ old('sourcesfinance', $sourcefinance[2]->id) == $annonce->sourcesfinance_id ? 'checked' : '' }}>
-                                        <span class="ml-2">{{ $sourcefinance[2]->name }}</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w-full md:w-1/2 px-3">
-                            <div class="form-group" id="autre-div"
-                                style="{{ old('sourcesfinance', $sourcefinance[2]->id) == $annonce->sourcesfinance_id ? 'display: block;' : 'display: none;' }}">
-                                <label for="autres">{{ __('Autres') }}</label>
-                                <input type="text" name="autres"
-                                    class="form-input @error('autres') is-invalid @enderror"
-                                    value="{{ old('autres', $annonce->autres_source) }}"
-                                    placeholder="Entrez votre source de finance">
-                                @error('autres')
-                                    <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="w-full md:w-1/2 px-3">
-                            <div class="form-group" id="category-div"
-                                style="{{ old('sourcesfinance', $sourcefinance[1]->id) == $annonce->sourcesfinance_id ? 'display: block;' : 'display: none;' }}">
-                                <label for="categoriefinance_id">{{ __('Catégorie de Financement') }}</label>
-                                <select id="categoriefinance_id" name="categoriefinance_id"
-                                    class="form-input @error('categoriefinance_id') is-invalid @enderror">
-                                    <option value="">{{ __('Sélectionner une catégorie de financement') }}</option>
-                                    <!-- Les options seront ajoutées dynamiquement par JavaScript -->
-                                </select>
-                                @error('categoriefinance_id')
-                                    <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="w-full px-3">
-                            <div class="form-group">
-                                <label for="description">{{ __('Description') }}</label>
-                                <textarea name="description" class="form-input @error('description') is-invalid @enderror">{{ old('description', $annonce->description) }}</textarea>
-                                @error('description')
-                                    <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="w-full md:w-1/2 px-3">
-                            <div class="form-group">
-                                <label for="ficher_annonce">{{ __('Fichier Annonce') }} <span
-                                        class="text-red-500">*</span></label>
-                                @if ($annonce->ficher_annonce)
-                                    <div class="mb-2">
-                                        <a href="{{ asset('storage/' . $annonce->ficher_annonce) }}" target="_blank"
-                                            class="text-primary hover:underline">{{ __('Voir le fichier existant') }}</a>
-                                    </div>
-                                @endif
-                                <input type="file" name="ficher_annonce"
-                                    class="form-input @error('ficher_annonce') is-invalid @enderror">
-                                @error('ficher_annonce')
-                                    <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="w-full md:w-1/2 px-3">
-                            <div class="form-group">
-                                <label for="ficher_annonce">{{ __('Dossier d\'Appel à Concurrence(.zip) ') }} <span
-                                        class="text-red-500">*</span></label>
-                                @if ($annonce->document_offre)
-                                    <div class="mb-2">
-                                        <a href="{{ asset('storage/' . $annonce->document_annonce) }}" target="_blank"
-                                            class="text-primary hover:underline">{{ __('Voir le fichier existant') }}</a>
-                                    </div>
-                                @endif
-                                <input type="file" name="document_offre"
-                                    class="form-input @error('document_annonce') is-invalid @enderror">
-                                @error('document_offre')
-                                    <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="w-full md:w-1/2 px-3">
-                            <div class="form-group">
-                                <label for="datetimepicker"
-                                    class="block text-gray-700 text-sm font-bold mb-2">{{ __('Date de Clôture') }} <span
-                                        class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <input type="text" id="datetimepicker" name="date_cloture"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                                        placeholder="Sélectionner la date et l'heure"
-                                        value="{{ old('date_cloture', $annonce->date_cloture) }}">
-                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                        <span class="text-gray-500 sm:text-sm">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                                                fill="currentColor">
-                                                <path fill-rule="evenodd"
-                                                    d="M6 2a1 1 0 00-1 1v1H3a2 2 0 00-2 2v11a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-2V3a1 1 0 00-1-1H6zm0 2V3h8v1H6z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </span>
-                                    </div>
-                                </div>
-                                @error('date_cloture')
-                                    <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Référence offre -->
-                        <div class="w-full md:w-1/2 px-3">
-                            <div class="form-group
-                                <label for="reference_offre">
-                                {{ __('Référence Offre') }} <span class="text-red-500">*</span></label>
-                                <input type="text" name="reference_offre"
-                                    class="form-input @error('reference_offre') is-invalid @enderror"
-                                    value="{{ old('reference_offre', $annonce->reference_offre) }}" required>
-                                @error('reference_offre')
-                                    <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
+                        @enderror
                     </div>
+                    <div class="flex justify-between">
+                        <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+                            onclick="prevStep(3)">Précédent</button>
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Enregistrer</button>
+                    </div>
+                </div>
 
-
-
-
-                    <button type="submit" class="btn btn-primary">{{ __('Modifier') }}</button>
             </form>
         </div>
     </div>
 
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            ClassicEditor
-                .create(document.querySelector('#corps_annonce'))
-                .catch(error => {
-                    console.error(error);
-                });
-        });
-    </script>
-
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialisation du sélecteur de date
-            flatpickr("#datetimepicker", {
-                enableTime: true,
-                dateFormat: "Y-m-d H:i", // Format 24 heures
-                time_24hr: true
-            });
-
-            // Initialisation de la gestion des sources de financement
-            const sourcesFinanceRadios = document.querySelectorAll('input[name="sourcesfinance"]');
-            const autresDiv = document.getElementById('autre-div');
-            const categoryDiv = document.getElementById('category-div');
-            const categorieSelect = document.getElementById('categoriefinance_id');
-
-            sourcesFinanceRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    autresDiv.style.display = 'none';
-                    categoryDiv.style.display = 'none';
-
-                    if (this.value === '{{ $sourcefinance[1]->id }}') {
-                        categoryDiv.style.display = 'block';
-                        fetchCategories(this.value);
-                    } else if (this.value === '{{ $sourcefinance[2]->id }}') {
-                        autresDiv.style.display = 'block';
-                    }
-                });
-            });
-
-            function fetchCategories(sourceId) {
-                categorieSelect.innerHTML =
-                    '<option value="">{{ __('Sélectionner une catégorie de financement') }}</option>';
-
-                if (sourceId) {
-                    fetch(`/api/categories/${sourceId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.categorie.forEach(function(categorie) {
-                                var option = document.createElement('option');
-                                option.value = categorie.id;
-                                option.textContent = categorie.name;
-                                categorieSelect.appendChild(option);
-                            });
-                        });
-                }
+        function nextStep(step) {
+            const currentStep = document.querySelector('.step-content:not(.hidden)');
+            const nextStep = document.getElementById(`step${step}-content`);
+            if (currentStep && nextStep) {
+                currentStep.classList.add('hidden');
+                nextStep.classList.remove('hidden');
+                updateIndicators(step);
             }
+        }
 
-            // Set initial visibility on page load
-            document.querySelectorAll('input[name="sourcesfinance"]:checked').forEach(radio => {
-                if (radio.value === '{{ $sourcefinance[1]->id }}') {
-                    categoryDiv.style.display = 'block';
-                    fetchCategories(radio.value);
-                } else if (radio.value === '{{ $sourcefinance[2]->id }}') {
-                    autresDiv.style.display = 'block';
+        function prevStep(step) {
+            const currentStep = document.querySelector('.step-content:not(.hidden)');
+            const prevStep = document.getElementById(`step${step}-content`);
+            if (currentStep && prevStep) {
+                currentStep.classList.add('hidden');
+                prevStep.classList.remove('hidden');
+                updateIndicators(step);
+            }
+        }
+
+        function updateIndicators(step) {
+            const indicators = document.querySelectorAll('.step-item');
+            indicators.forEach((indicator, index) => {
+                if (index < step - 1) {
+                    indicator.querySelector('.step-number').classList.replace('bg-gray-300', 'bg-red-500');
+                    indicator.querySelector('.step-label').classList.replace('text-gray-600', 'text-red-500');
+                } else if (index === step - 1) {
+                    indicator.querySelector('.step-number').classList.replace('bg-gray-300', 'bg-red-500');
+                    indicator.querySelector('.step-label').classList.replace('text-gray-600', 'text-red-500');
+                } else {
+                    indicator.querySelector('.step-number').classList.replace('bg-red-500', 'bg-gray-300');
+                    indicator.querySelector('.step-label').classList.replace('text-red-500', 'text-gray-600');
                 }
             });
-
-            // Set initial category selection
-            const selectedCategoryId = "{{ old('categoriefinance_id', $annonce->categoriefinance_id) }}";
-            if (selectedCategoryId) {
-                const categoryOption = document.createElement('option');
-                categoryOption.value = selectedCategoryId;
-                categoryOption.selected = true;
-                categorieSelect.appendChild(categoryOption);
-            }
-        });
+        }
     </script>
 
 @endsection

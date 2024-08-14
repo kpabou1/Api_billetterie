@@ -11,7 +11,7 @@
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}" class="text-primary">Dashboard</a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">{{ __('Liste des annonces') }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ __('Liste des Événements ') }}</li>
         </ol>
     </nav>
     <!-- Fin du titre de la page -->
@@ -23,8 +23,8 @@
             <button class="btn btn-info btn-sm" id="filterBtn">
                 <i class="fa fa-filter"></i> {{ __('Filtrer par date') }}
             </button>
-            <a href="{{ route('annonces.create') }}" class="btn btn-primary btn-sm ml-2">
-                <i class="fa fa-plus"></i> {{ __('Ajouter annonce') }}
+            <a href="{{ route('events_billets.create') }}" class="btn btn-primary btn-sm ml-2">
+                <i class="fa fa-plus"></i> {{ __('Ajouter un événement ') }}
             </a>
         </div>
     </div>
@@ -34,13 +34,12 @@
             <thead class="thead-light">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">{{ __('Objet du Marché') }}</th>
-                    <th scope="col">{{ __('Garantie de Soumission') }}</th>
-                    <th scope="col">{{ __('Adresse de l\'Autorité Contractante') }}</th>
-                    <th scope="col">{{ __('Reference offre') }}</th>
-                    <th scope="col">{{ __('Lieu de Dépôt') }}</th>
-                    <th scope="col">{{ __('Date de Dépôt') }}</th>
-                    <th scope="col">{{ __('Date de Clôture') }}</th>
+                    <th scope="col">{{ __('Titre de l\'événement') }}</th>
+                    <th scope="col">{{ __('Date') }}</th>
+                    <th scope="col">{{ __('Image') }}</th>
+                    <th scope="col">{{ __('Lieu') }}</th>
+                    <th scope="col">{{ __('Addrese') }}</th>
+                    <th scope="col">{{ __('Statut de l\'événement') }}</th>
                     <th scope="col">{{ __('Date de création') }}</th>
                     <th scope="col">{{ __('Actions') }}</th>
                 </tr>
@@ -92,7 +91,7 @@
                 var startDate = $('#startDate').val();
                 var endDate = $('#endDate').val();
 
-                table.ajax.url("{{ route('annonces.index') }}?from_date=" + startDate + "&to_date=" +
+                table.ajax.url("{{ route('events_billets.index') }}?from_date=" + startDate + "&to_date=" +
                     endDate).load();
                 $('#filterModal').modal('hide');
             });
@@ -101,38 +100,39 @@
             table = $('#annoncesTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('annonces.index') }}",
+                ajax: "{{ route('events_billets.index') }}",
                 columns: [{
-                        data: 'id',
-                        name: 'id'
+                        data: 'event_id',
+                        name: 'event_id'
                     },
                     {
-                        data: 'objet_marche',
-                        name: 'objet_marche'
+                        data: 'event_title',
+                        name: 'event_title'
+                    },
+
+                    {
+                        data: 'event_date',
+                        name: 'event_date'
                     },
                     {
-                        data: 'garantie_soumission',
-                        name: 'garantie_soumission'
+                        data: 'event_image',
+                        name: 'event_image',
+                        render: function(data, type, row) {
+                            var imageUrl = "{{ asset('storage/') }}/" + data;
+                            return `<img src="${imageUrl}" alt="Image de l'événement" style="width: 100px; height: auto;">`;
+                        }
                     },
                     {
-                        data: 'adresse_autorite_contractante',
-                        name: 'adresse_autorite_contractante'
+                        data: 'event_city',
+                        name: 'event_city'
                     },
                     {
-                        data: 'reference_offre',
-                        name: 'reference_offre'
+                        data: 'event_address',
+                        name: 'event_address'
                     },
                     {
-                        data: 'lieu_depot',
-                        name: 'lieu_depot'
-                    },
-                    {
-                        data: 'date_publication',
-                        name: 'date_publication'
-                    },
-                    {
-                        data: 'date_cloture',
-                        name: 'date_cloture'
+                        data: 'event_status',
+                        name: 'event_status'
                     },
                     {
                         data: 'created_at',
@@ -143,13 +143,13 @@
                         render: function(data, type, row) {
                             return `
                                <div class="d-flex gap-2">
-                                   <a href="{{ route('annonces.edit', ['id' => '__id__']) }}" class="btn btn-sm btn-outline-info">
+                                   <a href="{{ route('events_billets.edit', ['id' => '__id__']) }}" class="btn btn-sm btn-outline-info">
                                        <i class="fa fa-edit"></i>
                                    </a>
-                                   <a href="{{ route('annonces.show', ['id' => '__id__']) }}" class="btn btn-sm btn-outline-primary">
+                                   <a href="{{ route('events_billets.show', ['id' => '__id__']) }}" class="btn btn-sm btn-outline-primary">
                                        <i class="fa fa-eye"></i>
                                    </a>
-                                   <form action="{{ route('annonces.destroy', ['id' => '__id__']) }}" method="POST" class="d-inline">
+                                   <form action="{{ route('events_billets.destroy', ['id' => '__id__']) }}" method="POST" class="d-inline">
                                        @csrf
                                        @method('DELETE')
                                        <button type="submit" class="btn btn-sm btn-outline-danger delete-btn">
@@ -157,7 +157,7 @@
                                        </button>
                                    </form>
                                </div>
-                            `.replace(/__id__/g, row.id);
+                            `.replace(/__id__/g, row.event_id);
                         }
                     }
                 ],
@@ -174,7 +174,7 @@
 
                 Swal.fire({
                     title: 'Confirmation',
-                    text: 'Êtes-vous sûr de vouloir supprimer cette annonce ?',
+                    text: 'Êtes-vous sûr de vouloir supprimer cet Evenement ?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

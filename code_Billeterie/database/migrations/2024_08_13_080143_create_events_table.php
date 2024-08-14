@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('event_id');
             $table->enum('event_category', ['Autre', 'Concert-Spectacle', 'Diner Gala', 'Festival', 'Formation']);
             $table->string('event_title', 30);
-            $table->mediumText('event_description');
+            $table->mediumText('event_description')->nullable();
             $table->dateTime('event_date');
             $table->string('event_image', 200);
             $table->string('event_city', 100);
