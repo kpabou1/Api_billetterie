@@ -16,6 +16,7 @@ use App\Http\Controllers\FaonctionExterneController;
 //BackgroundImageController
 use App\Http\Controllers\BackgroundImageController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\OrderController;
 use App\Models\Event;
 
 
@@ -52,6 +53,24 @@ Route::get('/listeevents', [FaonctionExterneController::class, 'listeEvents'])->
 
 
 Route::middleware('auth')->group(function () {
+
+
+Route::get('/listeorders', [OrderController::class, 'index'])->name('listeorders');
+Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Route::get('/payment/{ticketId}', [FaonctionExterneController::class, 'showPaymentPage'])->name('payment.show');
 
 Route::post('/paymentinfo', [FaonctionExterneController::class, 'processPaymentInfo'])->name('payments.inofs');

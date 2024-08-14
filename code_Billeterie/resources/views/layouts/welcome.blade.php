@@ -78,7 +78,7 @@
     <!-- Barre de Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="#">Tikerama</a>
+            <a class="navbar-brand" href="#">Dev Isidore</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -132,7 +132,7 @@
     <!-- Footer -->
     <footer>
         <div class="container text-center">
-            <p>&copy; 2024 Tikerama. Tous droits réservés.</p>
+            <p>&copy; 2024 Dev Isidore. Tous droits réservés.</p>
             <p><a href="#">Politique de confidentialité</a> | <a href="#">Conditions d'utilisation</a></p>
         </div>
     </footer>
