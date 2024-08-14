@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('order_type', 50);
             $table->string('order_payment', 100);
             $table->text('order_info')->nullable();
+            
             $table->timestamps();
         });
     }

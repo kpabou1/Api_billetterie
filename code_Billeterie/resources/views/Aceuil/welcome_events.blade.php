@@ -251,6 +251,7 @@
         
                                       <div class="mx-2">
                                             <div class="card h-100 d-flex flex-row">
+                                                  @csrf
                                                 <div class="card-body d-flex flex-column">
                                                     <h5 class="card-title">${ticket.ticket_type_name}</h5>
                                                     <p class="card-text">Prix: ${ticket.ticket_type_price} CFA</p>

@@ -8,7 +8,7 @@
 
 <div class="container-fluid">
 
-    @if(auth()->user()->roles->whereIn('name', ['Gerant', 'Vendeur','Magasinier','Admin','Developpeur'])->isNotEmpty())
+    @if(auth()->user()->roles->whereIn('name', ['UserClient', 'Admin','Developpeur'])->isNotEmpty())
 
         @if(session('error'))
             <div class="alert alert-danger">

@@ -22,13 +22,12 @@ class DashController extends Controller
         $user = auth()->user();
         $role = $user->roles->first()->name;
     
-        if ($role == 'UserClient') {
-            $nif = '';
-            return view('dashboard', compact('nif'));
+        if ($role == 'UserClients') {
+            return view('dashboard');
         }
     
         // Rôles autorisés
-        $allowedRoles = ['Developpeur', 'Client', 'Admin'];
+        $allowedRoles = ['Developpeur', 'UserClient', 'Admin'];
     
         if (in_array($role, $allowedRoles)) {
             // SuiviMarche conter nombre
@@ -51,22 +50,11 @@ class DashController extends Controller
             // Récupération du nombre d'utilisateurs
             $nbre_users = User::count();
     
-            // Statistiques des contrats payés et non payés au cours des 2 derniers mois
-            $paidContracts = 0;
-            $unpaidContracts = 0;
-            $marches = 0;
-            $suiviMarcheNbreNON = 0;
-            $suiviMarcheNbreOui = 0;
+           
     
             return view('dashboard', compact(
                 'nbre_users',
-                'marches',
-                'suiviMarcheNbre',
-                'date',
-                'suiviMarcheNbreNON',
-                'suiviMarcheNbreOui',
-                'paidContracts',
-                'unpaidContracts'
+
             ));
         }
     

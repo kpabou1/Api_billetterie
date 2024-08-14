@@ -90,12 +90,19 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Ressources</a>
                     </li>
+                    @if (Route::has('login'))
                     <li class="nav-item">
-                        <a class="nav-link btn btn-outline-primary me-2" href="#">Se connecter</a>
+                        @auth
+                            <a class="nav-link btn btn-outline-primary me-2" href="{{ route('dashboard') }}">Dashboard</a>
+                        @else
+                            <a class="nav-link btn btn-outline-primary me-2" href="{{ route('login') }}">Se connecter</a>
+                            @if (Route::has('register'))
+                                <a class="nav-link btn btn-primary" href="{{ route('register') }}">Ouvrir un compte</a>
+                            @endif
+                        @endauth
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-primary" href="#">Ouvrir un compte</a>
-                    </li>
+                @endif
+                
                 </ul>
             </div>
         </div>
