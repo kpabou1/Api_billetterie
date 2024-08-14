@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    {{ __('Annonces') }}
+    {{ __('Liste des Commandes') }}
 @endsection
 
 @section('content')
@@ -11,7 +11,7 @@
             <li class="breadcrumb-item">
                 <a href="{{ route('dashboard') }}" class="text-primary">Dashboard</a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">{{ __('Liste des Événements ') }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ __('Liste des Commandes') }}</li>
         </ol>
     </nav>
     <!-- Fin du titre de la page -->
@@ -23,24 +23,21 @@
             <button class="btn btn-info btn-sm" id="filterBtn">
                 <i class="fa fa-filter"></i> {{ __('Filtrer par date') }}
             </button>
-            <a href="{{ route('events_billets.create') }}" class="btn btn-primary btn-sm ml-2">
-                <i class="fa fa-plus"></i> {{ __('Ajouter un événement ') }}
-            </a>
+            
         </div>
     </div>
 
     <div class="table-responsive">
-        <table class="table table-bordered table-hover w-100" id="annoncesTable">
+        <table class="table table-bordered table-hover w-100" id="ordersTable">
             <thead class="thead-light">
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">{{ __('Titre de l\'événement') }}</th>
-                    <th scope="col">{{ __('Date') }}</th>
-                    <th scope="col">{{ __('Image') }}</th>
-                    <th scope="col">{{ __('Lieu') }}</th>
-                    <th scope="col">{{ __('Addrese') }}</th>
-                    <th scope="col">{{ __('Statut de l\'événement') }}</th>
-                    <th scope="col">{{ __('Date de création') }}</th>
+                    <th scope="col">{{ __('Numéro de Commande') }}</th>
+                    <th scope="col">{{ __('Titre de l\'Événement') }}</th>
+                    <th scope="col">{{ __('Prix') }}</th>
+                    <th scope="col">{{ __('Type de Commande') }}</th>
+                    <th scope="col">{{ __('Paiement') }}</th>
+                    <th scope="col">{{ __('Date de Création') }}</th>
                     <th scope="col">{{ __('Actions') }}</th>
                 </tr>
             </thead>
@@ -91,60 +88,30 @@
                 var startDate = $('#startDate').val();
                 var endDate = $('#endDate').val();
 
-                table.ajax.url("{{ route('events_billets.index') }}?from_date=" + startDate + "&to_date=" +
-                    endDate).load();
+                table.ajax.url("{{ route('listeorders') }}?from_date=" + startDate + "&to_date=" + endDate).load();
                 $('#filterModal').modal('hide');
             });
 
             // Initialiser DataTable
-            table = $('#annoncesTable').DataTable({
+            table = $('#ordersTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('events_billets.index') }}",
-                columns: [{
-                        data: 'event_id',
-                        name: 'event_id'
-                    },
-                    {
-                        data: 'event_title',
-                        name: 'event_title'
-                    },
-
-                    {
-                        data: 'event_date',
-                        name: 'event_date'
-                    },
-                    {
-                        data: 'event_image',
-                        name: 'event_image',
-                        render: function(data, type, row) {
-                            var imageUrl = "{{ asset('storage/') }}/" + data;
-                            return `<img src="${imageUrl}" alt="Image de l'événement" style="width: 100px; height: auto;">`;
-                        }
-                    },
-                    {
-                        data: 'event_city',
-                        name: 'event_city'
-                    },
-                    {
-                        data: 'event_address',
-                        name: 'event_address'
-                    },
-                    {
-                        data: 'event_status',
-                        name: 'event_status'
-                    },
-                    {
-                        data: 'created_at',
-                        name: 'created_at'
-                    },
-                    {
+                ajax: "{{ route('listeorders') }}",
+                columns: [
+                    { data: 'order_id', name: 'order_id' },
+                    { data: 'order_number', name: 'order_number' },
+                    { data: 'event_title', name: 'event_title' },
+                    { data: 'order_price', name: 'order_price' },
+                    { data: 'order_type', name: 'order_type' },
+                    { data: 'order_payment', name: 'order_payment' },
+                    { data: 'created_at', name: 'created_at' },
+                    { 
                         data: null,
                         render: function(data, type, row) {
                             return `
                                <div class="d-flex gap-2">
-
-                                   <form action="{{ route('events_billets.destroy', ['id' => '__id__']) }}" method="POST" class="d-inline">
+                                  
+                                   <form action="{{ route('orders.destroy', '__id__') }}" method="POST" class="d-inline">
                                        @csrf
                                        @method('DELETE')
                                        <button type="submit" class="btn btn-sm btn-outline-danger delete-btn">
@@ -152,24 +119,22 @@
                                        </button>
                                    </form>
                                </div>
-                            `.replace(/__id__/g, row.event_id);
+                            `.replace(/__id__/g, row.order_id);
                         }
                     }
                 ],
-                order: [
-                    [1, 'asc']
-                ]
+                order: [[1, 'asc']]
             });
 
             // Confirmation de suppression avec SweetAlert
-            $('#annoncesTable').on('click', '.delete-btn', function(event) {
-                event.preventDefault(); // Empêche la soumission immédiate du formulaire
+            $('#ordersTable').on('click', '.delete-btn', function(event) {
+                event.preventDefault();
 
                 var form = $(this).closest('form');
 
                 Swal.fire({
                     title: 'Confirmation',
-                    text: 'Êtes-vous sûr de vouloir supprimer cet Evenement ?',
+                    text: 'Êtes-vous sûr de vouloir supprimer cette commande ?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

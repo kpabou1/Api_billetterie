@@ -34,7 +34,7 @@
             </a>
           </div>
           <div class="mdc-list-item mdc-drawer-item">
-            <a class="mdc-drawer-link" href="{{ route('events_billets.index') }}">
+            <a class="mdc-drawer-link" href="{{ route('listeorders') }}">
               <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">pie_chart_outlined</i>
              Liste des commandes
             </a>
