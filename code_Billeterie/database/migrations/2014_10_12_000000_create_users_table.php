@@ -17,12 +17,13 @@ return new class extends Migration
             $table->string('lastname');
             $table->date('datenaiss')->nullable();
           //  entreprise,adresse,ville
+
             $table->string('adresse')->nullable();
             $table->string('ville')->nullable();
             $table->string('entreprise')->nullable();
             $table->string('lieu_naissance')->nullable();
             $table->string('indicatiftel')->nullable();
-            $table->string('telephone');
+            $table->string('telephone')->nullable();
             $table->string('sexe')->nullable();
             $table->string('username')->unique();
             $table->string('email')->unique()->nullable();

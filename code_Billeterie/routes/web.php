@@ -50,12 +50,22 @@ Route::get('/', [FaonctionExterneController::class, 'welcome'])->name('welcome')
 
 Route::get('/listeevents', [FaonctionExterneController::class, 'listeEvents'])->name('listeevents');
 
+
+Route::middleware('auth')->group(function () {
 Route::get('/payment/{ticketId}', [FaonctionExterneController::class, 'showPaymentPage'])->name('payment.show');
 
+Route::post('/paymentinfo', [FaonctionExterneController::class, 'processPaymentInfo'])->name('payments.inofs');
+//page de confirme payement et save payements
+Route::get('/paymentshowconfirm/{ticketId}/{ticket_quantity}/{orderIntentId}', [FaonctionExterneController::class, 'showPaymentConfirmPage'])->name('payment.showconfirm');
+Route::post('/paymentconfirm', [FaonctionExterneController::class, 'processPaymentConfirm'])->name('payment.confirm');
+Route::get('/ticket/download', [FaonctionExterneController::class, 'downloadTicket'])->name('ticket.download');
+
+});
 
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashController::class, 'index'])->name('dashboard');
+
 
 
 });

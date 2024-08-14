@@ -19,9 +19,10 @@ return new class extends Migration
                 ->onUpdate('cascade'); // Met à jour les tickets associés si l'événement est mis à jour
             $table->string('ticket_email', 255);
             $table->string('ticket_phone', 20);
-            $table->mediumInteger('ticket_price');
+            $table->integer('ticket_quantity');
+
             $table->foreignId('ticket_order_id')
-                ->nullable()
+                
                 ->constrained('orders', 'order_id')
                 ->onDelete('cascade') // Supprime les tickets associés si la commande est supprimée
                 ->onUpdate('cascade'); // Met à jour les tickets associés si la commande est mise à jour

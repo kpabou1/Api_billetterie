@@ -9,9 +9,7 @@
         <li>
             <a href="{{ route('dashboard') }}" class="text-primary hover:underline">Dashboard</a>
         </li>
-        <li class="before:content-['/'] ltr:before:mr-1 rtl:before:ml-1 text-gray-600">
-            <a href="{{ route('ppm.index') }}" class="text-primary hover:underline">Fond Images</a>
-        </li>
+       
         <li class="before:content-['/'] ltr:before:mr-1 rtl:before:ml-1 text-gray-600">
             <span>{{ __('Modification image') }}</span>
         </li>

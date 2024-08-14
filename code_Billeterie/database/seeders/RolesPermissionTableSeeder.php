@@ -20,21 +20,17 @@ class RolesPermissionTableSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            // ppms
-            'ppm-list',
-            'ppm-create',
-            'ppm-edit',
-            'ppm-delete',
-            // suivi_marches
-            'suivi_marches-list',
-            'suivi_marches-create',
-            'suivi_marches-edit',
-            'suivi_marches-delete',
-            // annee
-            'annee-list',
-            'annee-create',
-            'annee-edit',
-            'annee-delete',
+            // eventss
+            'events-list',
+            'events-create',
+            'events-edit',
+            'events-delete',
+            // commandes
+            'commandes-list',
+            'commandes-create',
+            'commandes-edit',
+            'commandes-delete',
+          
         ];
 
         // Create permissions
@@ -45,24 +41,40 @@ class RolesPermissionTableSeeder extends Seeder
         // Create roles
         $roleAdmin = Role::create(['name' => 'Admin']);
 
+      
         // Define permissions for each role
         $permissionsAdmin = [
-            'ppm-list',
-            'ppm-create',
-            'ppm-edit',
-            'ppm-delete',
-            'suivi_marches-list',
-            'suivi_marches-create',
-            'suivi_marches-edit',
-            'suivi_marches-delete',
-            'annee-list',
-            'annee-create',
-            'annee-edit',
-            'annee-delete',
+            'events-list',
+            'events-create',
+            'events-edit',
+            'events-delete',
+            'commandes-list',
+            'commandes-create',
+            'commandes-edit',
+            'commandes-delete',
+            
         ];
 
         // Assign permissions to roles
         $roleAdmin->syncPermissions($permissionsAdmin);
+
+        $roleUserClient= Role::create(['name' => 'UserClient']);
+        //    // Define permissions for each role
+        $permissionsUserClient = [
+            'events-list',
+            'events-create',
+            'events-edit',
+            'events-delete',
+            'commandes-list',
+            'commandes-create',
+            'commandes-edit',
+            'commandes-delete',
+            
+        ];
+        // Assign permissions to roles
+        $roleUserClient->syncPermissions($permissionsUserClient);
+
+
 
         // Create admin user
         $userAdmin = User::create([

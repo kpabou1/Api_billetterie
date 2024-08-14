@@ -36,22 +36,11 @@
           <div class="mdc-list-item mdc-drawer-item">
             <a class="mdc-drawer-link" href="{{ route('events_billets.index') }}">
               <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">pie_chart_outlined</i>
-              Suivie Contrat
+             Liste des commandes
             </a>
           </div>
 
-          <div class="mdc-list-item mdc-drawer-item">
-            <a class="mdc-drawer-link" href="{{ route('events_billets.index') }}" >
-              <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">description</i>
-              Gerer Année
-            </a>
-          </div>
-          <div class="mdc-list-item mdc-drawer-item">
-            <a class="mdc-drawer-link" href="{{ route('statistiques.index') }}">
-              <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">dashboard</i>
-              Statistiques
-            </a>
-          </div>
+          
           <div class="mdc-list-item mdc-drawer-item">
             <a class="mdc-drawer-link" href="{{ route('background_image.edit') }}">
               <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">pages</i>

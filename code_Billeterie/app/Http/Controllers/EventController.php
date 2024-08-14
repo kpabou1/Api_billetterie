@@ -10,6 +10,13 @@ use Yajra\DataTables\Facades\DataTables;
 
 class EventController extends Controller
 {
+    public function __construct()
+    {
+    $this->middleware('permission:events-list|events-create|events-edit|events-delete', ['only' => ['index','show']]);
+    $this->middleware('permission:events-create', ['only' => ['create','store']]);
+    $this->middleware('permission:events-edit', ['only' => ['edit','update']]);
+    $this->middleware('permission:events-delete', ['only' => ['destroy']]);
+    }
     //
     public function index(Request $request)
     {

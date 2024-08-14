@@ -36,9 +36,9 @@
                 <div class="card-body" style="z-index: 1;">
                     <div class="flex justify-between items-center">
                         <div class="flex-grow overflow-hidden">
-                            <p class="text-uppercase font-medium text-gray-500 truncate">Nombre de Contrats</p>
+                            <p class="text-uppercase font-medium text-gray-500 truncate">Nombre de users</p>
                             <h4 class="text-2xl font-semibold text-secondary truncate">
-                                <span class="counter-value" data-target="28410">{{ $suiviMarcheNbre }}</span>
+                                <span class="counter-value" data-target="28410">{{ $nbre_users }}</span>
                             </h4>
                         </div>
                         <div class="flex-shrink-0">
@@ -59,31 +59,7 @@
     <!-- Inclure ApexCharts.js -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Données
-            var categories = ['Payé', 'Non Payé'];
-            var paidContracts = {{ $paidContracts }};
-            var unpaidContracts = {{ $unpaidContracts }};
-
-            // Options du graphique
-            var options = {
-                chart: {
-                    type: 'pie', // Changement du type de graphique à 'pie' (cercle)
-                    height: 350,
-                },
-                series: [paidContracts, unpaidContracts],
-                labels: ['Contrats Payés', 'Contrats Non Payés'],
-                legend: {
-                    position: 'top',
-                },
-            };
-
-            // Créer le graphique
-            var chart = new ApexCharts(document.querySelector("#chart"), options);
-            chart.render();
-        });
-    </script>
+  
 </body>
 
 </html>
