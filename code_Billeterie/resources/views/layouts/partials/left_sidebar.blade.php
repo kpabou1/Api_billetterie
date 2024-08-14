@@ -28,20 +28,20 @@
           </div>
 
           <div class="mdc-list-item mdc-drawer-item">
-            <a class="mdc-drawer-link" href="{{ route('events.index') }}">
+            <a class="mdc-drawer-link" href="{{ route('events_billets.index') }}">
               <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">track_changes</i>
               EVENTS
             </a>
           </div>
           <div class="mdc-list-item mdc-drawer-item">
-            <a class="mdc-drawer-link" href="{{ route('suivi_marches.index') }}">
+            <a class="mdc-drawer-link" href="{{ route('events_billets.index') }}">
               <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">pie_chart_outlined</i>
               Suivie Contrat
             </a>
           </div>
 
           <div class="mdc-list-item mdc-drawer-item">
-            <a class="mdc-drawer-link" href="{{ route('annees.index') }}" >
+            <a class="mdc-drawer-link" href="{{ route('events_billets.index') }}" >
               <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">description</i>
               Gerer Année
             </a>

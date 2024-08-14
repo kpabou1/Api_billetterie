@@ -6,18 +6,17 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\UsersController;
 
-use App\Http\Controllers\AnnoncesController;
-//PpmController
-use App\Http\Controllers\PpmController;
+
 use App\Http\Controllers\DashController;
-use App\Models\Annee;
-use App\Http\Controllers\AnneeController;
 use Illuminate\Pagination\Paginator;
-use App\Http\Controllers\SuiviMarcheController;
+
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\StatistiquesController;
+use App\Http\Controllers\FaonctionExterneController;
 //BackgroundImageController
 use App\Http\Controllers\BackgroundImageController;
+use App\Http\Controllers\EventController;
+use App\Models\Event;
 
 
 
@@ -35,29 +34,25 @@ use App\Http\Controllers\BackgroundImageController;
 &\hspace{.2cm}{Réalisation du diagramme de cas d'utilisation}\\&\hspace{.2cm}{Réalisation du diagramme de classe}\\
 */
 
-Route::get('/', function () {
-    return view('Aceuil.welcome');
-
-    //return view('welcome', compact('annonces'));
-
-
-})->name('welcome');
 
 //baground
 
+# Routes accessible sans connexion 
 
 
-Route::get('/listeannonce', function () {
 
-    //Rércupération de toutes les annonces
-    $annonces = Annonce::orderBy('created_at', 'desc')->paginate(9);
-       // dd($annonces);
-    
-        return view('Aceuil.welcome_annonces', compact('annonces'));
-        //return view('welcome', compact('annonces'));
-    
-    
-    })->name('listeannonces');
+Route::get('api/event/{id}', [FaonctionExterneController::class, 'showAnnonce'])->name('fonct.event');
+
+
+
+
+Route::get('/', [FaonctionExterneController::class, 'welcome'])->name('welcome');
+
+Route::get('/listeevents', [FaonctionExterneController::class, 'listeEvents'])->name('listeevents');
+
+Route::get('/payment/{ticketId}', [FaonctionExterneController::class, 'showPaymentPage'])->name('payment.show');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashController::class, 'index'])->name('dashboard');
@@ -67,9 +62,12 @@ Route::middleware('auth')->group(function () {
 
 
 
-//Route::match(['get', 'post'], '/botman', 'App\Http\Controllers\BotManController@handle');
 
-Route::match(['get', 'post'], '/botman', 'App\Http\Controllers\BotManController@handle');
+
+
+
+
+
 
 
 
@@ -80,42 +78,40 @@ Route::middleware('auth')->group(function () {
 
 });
 
-//annees
-Route::get('/annees', [AnneeController::class, 'index'])->name('annees.index');
-Route::get('/annees/create', [AnneeController::class, 'create'])->name('annees.create');
-Route::post('/annees', [AnneeController::class, 'store'])->name('annees.store');
-Route::get('/annees/{id}/edit', [AnneeController::class, 'edit'])->name('annees.edit');
-Route::patch('/annees/{id}', [AnneeController::class, 'update'])->name('annees.update');
 
-Route::get('/annees/{id}', [AnneeController::class, 'show'])->name('annees.show');
-Route::delete('/annees/{id}', [AnneeController::class, 'destroy'])->name('annees.destroy');
 
-Route::get('/suivi-marches', [SuiviMarcheController::class, 'index'])->name('suivi_marches.index');
-Route::get('/suivi-marches/create', [SuiviMarcheController::class, 'create'])->name('suivi_marches.create');
-Route::post('/suivi-marches', [SuiviMarcheController::class, 'store'])->name('suivi_marches.store');
-Route::get('/suivi-marches/{id}/edit', [SuiviMarcheController::class, 'edit'])->name('suivi_marches.edit');
-Route::patch('/suivi-marches/{id}', [SuiviMarcheController::class, 'update'])->name('suivi_marches.update');
-Route::get('/suivi-marches/{id}', [SuiviMarcheController::class, 'show'])->name('suivi_marches.show');
-Route::delete('/suivi-marches/{id}', [SuiviMarcheController::class, 'destroy'])->name('suivi_marches.destroy');
-Route::get('/suivi-enregistrement/create/{id}', [SuiviMarcheController::class, 'create_enregistrement'])->name('create_enregistrement.create');
-Route::post('suivi_marches/export', [SuiviMarcheController::class, 'export'])->name('suivi_marches.export');
-Route::get('/suivi_marches/imprimer_marcher/{id}', [SuiviMarcheController::class, 'imprimer_marcher'])->name('suivi_marches.imprimer_marcher');
-//* ppm
-/*
- Route::get('/nationalites/export', [NationaliteController::class, 'export'])->name('nationalites.export');
-    Route::post('/nationalites/import', [NationaliteController::class, 'import'])->name('nationalites.import');
 
-*/
-Route::post('/ppm/export', [PpmController::class, 'export'])->name('ppm.export');
-Route::post('/ppm/import', [PpmController::class, 'import'])->name('ppm.import');
+//routes pour le controlleur events
 
-Route::get('/ppm', [PpmController::class, 'index'])->name('ppm.index');
-Route::get('/ppm/create', [PpmController::class, 'create'])->name('ppm.create');
-Route::post('/ppm', [PpmController::class, 'store'])->name('ppm.store');
-Route::get('/ppm/{id}/edit', [PpmController::class, 'edit'])->name('ppm.edit');
-Route::patch('/ppm/{id}', [PpmController::class, 'update'])->name('ppm.update');
-Route::get('/ppm/{id}', [PpmController::class, 'show'])->name('ppm.show');
-Route::delete('/ppm/{id}', [PpmController::class, 'destroy'])->name('ppm.destroy');
+Route::get('/events_billets', [EventController::class, 'index'])->name('events_billets.index');
+Route::get('/events_billets/create', [EventController::class, 'create'])->name('events_billets.create');
+Route::post('/events_billets', [EventController::class, 'store'])->name('events_billets.store');
+Route::get('/events_billets/{id}/edit', [EventController::class, 'edit'])->name('events_billets.edit');
+Route::get('/events_billets/{id}', [EventController::class, 'show'])->name('events_billets.show');
+Route::patch('/events_billets/{id}', [EventController::class, 'update'])->name('events_billets.update');
+Route::delete('/events_billets/{id}', [EventController::class, 'destroy'])->name('events_billets.destroy');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //création des routes pour les utilisateurs tout en utilisant le middleware auth
 Route::middleware('auth')->group(function () {

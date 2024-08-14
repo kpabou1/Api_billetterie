@@ -10,31 +10,140 @@
             <a href="{{ route('dashboard') }}" class="text-primary hover:underline">Dashboard</a>
         </li>
         <li class="before:content-['/'] ltr:before:mr-1 rtl:before:ml-1">
-            <a href="{{ route('annonces.index') }}" class="text-primary hover:underline">Annonces</a>
+            <a href="{{ route('events_billets.index') }}" class="text-primary hover:underline">Annonces</a>
         </li>
         <li class="before:content-['/'] ltr:before:mr-1 rtl:before:ml-1">
-            <span>{{ __('Ajouter une annonce') }}</span>
+            <span>{{ __('Ajouter un événement') }}</span>
         </li>
     </ul>
     <br>
     <!-- End page title -->
 
     @include('flash-message')
+    <div class="container mx-auto p-8">
+        <div class="bg-white p-8 rounded shadow-md">
+            <h2 class="text-3xl font-bold mb-8 text-center">Créer un événement</h2>
 
-    <div class="card">
-        <div class="card-body">
-            <form class="space-y-5" action="{{ route('annonces.store') }}" method="POST" enctype="multipart/form-data">
+            <div class="mb-8">
+                <div class="flex justify-between">
+                    <div class="step-item" id="step1-indicator">
+                        <div
+                            class="step-number bg-red-500 text-white rounded-full w-10 h-10 flex items-center justify-center mx-auto">
+                            1</div>
+                        <div class="step-label mt-2 text-center text-red-500">Info de base</div>
+                    </div>
+                    <div class="step-item" id="step2-indicator">
+                        <div
+                            class="step-number bg-gray-300 text-gray-600 rounded-full w-10 h-10 flex items-center justify-center mx-auto">
+                            2</div>
+                        <div class="step-label mt-2 text-center text-gray-600">Date, lieu et images</div>
+                    </div>
+                    <div class="step-item" id="step3-indicator">
+                        <div
+                            class="step-number bg-gray-300 text-gray-600 rounded-full w-10 h-10 flex items-center justify-center mx-auto">
+                            3</div>
+                        <div class="step-label mt-2 text-center text-gray-600">Tickets et infoline</div>
+                    </div>
+                    <div class="step-item" id="step4-indicator">
+                        <div
+                            class="step-number bg-gray-300 text-gray-600 rounded-full w-10 h-10 flex items-center justify-center mx-auto">
+                            4</div>
+                        <div class="step-label mt-2 text-center text-gray-600">Publication</div>
+                    </div>
+                </div>
+            </div>
+
+            <form action="{{ route('events_billets.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <div class="flex flex-wrap -mx-3">
-                    <div class="w-full px-3">
-                        <div class="form-group">
-                            <label for="objet_marche">{{ __('Objet du Marché') }} <span
-                                    class="text-red-500">*</span></label>
-                            <input type="text" name="objet_marche"
-                                class="form-input @error('objet_marche') is-invalid @enderror"
-                                value="{{ old('objet_marche') }}" required>
-                            @error('objet_marche')
+                <!-- Step 1: Info de base -->
+                <div class="step-content" id="step1-content">
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Catégorie <span class="text-red-500">*</span></label>
+                        <select name="event_category" class="w-full mt-2 p-2 border rounded">
+                            <option value="Autre">Autre</option>
+                            <option value="Concert-Spectacle">Concert-Spectacle</option>
+                            <option value="Diner Gala">Diner Gala</option>
+                            <option value="Festival">Festival</option>
+                            <option value="Formation">Formation</option>
+                        </select>
+                        @error('event_category')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Titre de l'évènement <span class="text-red-500">*</span></label>
+                        <input type="text" name="event_title" class="w-full mt-2 p-2 border rounded" maxlength="30"
+                            required>
+                        @error('event_title')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Description textuelle</label>
+                        <textarea name="event_description" class="w-full mt-2 p-2 border rounded"></textarea>
+                        @error('event_description')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" class="bg-red-500 text-white px-4 py-2 rounded"
+                            onclick="nextStep(2)">Suivant</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Date, lieu et images -->
+                <div class="step-content hidden" id="step2-content">
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Date & Heure <span class="text-red-500">*</span></label>
+                        <input type="datetime-local" name="event_date" class="w-full mt-2 p-2 border rounded" required>
+                        @error('event_date')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Ville<span class="text-red-500">*</span></label>
+                        <input type="text" name="event_city" class="w-full mt-2 p-2 border rounded" required>
+                        @error('event_city')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Adresse complète <span class="text-red-500">*</span></label>
+                        <input type="text" name="event_address" class="w-full mt-2 p-2 border rounded" required>
+                        @error('event_address')
+                            <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-gray-700">Image principale <span class="text-red-500">*</span></label>
+                        <div class="relative w-full h-48 bg-gray-100 border rounded flex items-center justify-center">
+                            <img id="imagePreview" src="https://via.placeholder.com/150" alt="Image Preview"
+                                class="max-h-full max-w-full">
+                            <input type="file" name="event_image"
+                                class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer" required
+                                onchange="previewImage(event)">
+                            <div class="absolute top-2 right-2 bg-white p-1 rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 20h9M16.5 3.5a2.121 2.121 0 010 3L8.5 14.5l-2 2-3-3 2-2 8-8a2.121 2.121 0 013 0z" />
+                                </svg>
+                            </div>
+                            @error('event_image')
                                 <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
                                     {{ $message }}
                                 </div>
@@ -42,344 +151,272 @@
                         </div>
                     </div>
 
-                    <div class="w-full px-3">
-                        <div class="form-group">
-                            <label for="corps_annonce">{{ __('Corps de l\'annonce') }} <span
-                                    class="text-red-500">*</span></label>
-                            <textarea id="corps_annonce" name="corps_annonce" class="form-input @error('corps_annonce') is-invalid @enderror">{{ old('corps_annonce') }}</textarea>
-                            @error('corps_annonce')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+                    <script>
+                        function previewImage(event) {
+                            const reader = new FileReader();
+                            reader.onload = function() {
+                                const output = document.getElementById('imagePreview');
+                                output.src = reader.result;
+                            }
+                            reader.readAsDataURL(event.target.files[0]);
+                        }
+                    </script>
+
+                    <div class="flex justify-between">
+                        <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded"
+                            onclick="previousStep(1)">Précédent</button>
+                        <button type="button" class="bg-red-500 text-white px-4 py-2 rounded"
+                            onclick="nextStep(3)">Suivant</button>
                     </div>
+                </div>
 
-
-                    <div class="w-full px-3 mb-6">
-                        <div class="form-group">
-                            <label for="categorie"
-                                class="block text-gray-700 text-sm font-bold mb-2">{{ __('Type de marché') }} <span
-                                    class="text-red-500">*</span></label>
-                            <select id="categorie" name="categorie"
-                                class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-                                @foreach ($categoriemarches as $categorie)
-                                    <option value="{{ $categorie->id }}">{{ $categorie->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('categorie')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded mt-2">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-
-
-                    <div class="w-full md:w-1/3 px-3">
-                        <div class="form-group">
-                            <label for="nom_autorite_contractante">{{ __('Nom Autorité Contractante') }} <span
-                                    class="text-red-500">*</span></label>
-                            <input type="text" name="nom_autorite_contractante"
-                                class="form-input @error('nom_autorite_contractante') is-invalid @enderror"
-                                value="{{ old('nom_autorite_contractante') }}" required>
-                            @error('nom_autorite_contractante')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="w-full md:w-1/3 px-3">
-                        <div class="form-group">
-                            <label for="image_autorite_contractante">{{ __('Logo Autorité Contractante') }}</label>
-                            <input type="file" name="image_autorite_contractante" accept="image/*"
-                                class="form-input @error('image_autorite_contractante') is-invalid @enderror">
-                            @error('image_autorite_contractante')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-
-
-
-                    <div class="w-full md:w-1/3 px-3">
-                        <div class="form-group">
-                            <label for="lieu_depot">{{ __('Lieu de Dépôt') }} <span
-                                    class="text-red-500">*</span></label></label>
-                            <input type="text" name="lieu_depot"
-                                class="form-input @error('lieu_depot') is-invalid @enderror"
-                                value="{{ old('lieu_depot') }}" required>
-                            @error('lieu_depot')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="w-full px-3">
-                        <div class="form-group">
-                            <label for="adresse_autorite_contractante">{{ __('Adresse Autorité Contractante') }} <span
-                                    class="text-red-500">*</span></label>
-                            <textarea name="adresse_autorite_contractante"
-                                class="form-input @error('adresse_autorite_contractante') is-invalid @enderror">{{ old('adresse_autorite_contractante') }}</textarea>
-                            @error('adresse_autorite_contractante')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-
-
-                    <div class="w-full px-3">
-                        <div class="form-group">
-                            <label for="garantie_soumission">{{ __('Garantie de Soumission') }} <span
-                                    class="text-red-500">*</span></label>
-                            <textarea name="garantie_soumission" class="form-input @error('garantie_soumission') is-invalid @enderror">{{ old('garantie_soumission') }}</textarea>
-                            @error('garantie_soumission')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-
-
-
-                    <div class="w-full md:w-1/3 px-3">
-                        <div class="form-group">
-                            <label for="date_depot">{{ __('Date de publication') }}</label>
-                            <input type="date" name="date_publication"
-                                class="form-input @error('date_publication') is-invalid @enderror"
-                                value="{{ old('date_publication') }}">
-                            @error('date_publication')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-
-
-
-                    <div class="flex flex-wrap -mx-3">
-                        <div class="form-group">
-                            <label>{{ __('Source de Financement') }}<span class="text-red-500">*</span></label>
-                            <div class="flex items-center space-x-4 mt-2">
-                                <label class="flex items-center">
-                                    <input type="radio" name="sourcesfinance"
-                                        class="form-radio h-5 w-5 rounded-full text-blue-600"
-                                        value="{{ $sourcefinances[0]->id }}">
-                                    <span class="ml-2">{{ $sourcefinances[0]->name }}</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" id="sourcesfinance_id" name="sourcesfinance"
-                                        class="form-radio h-5 w-5 rounded-full text-blue-600"
-                                        value="{{ $sourcefinances[1]->id }}">
-                                    <span class="ml-2">{{ $sourcefinances[1]->name }}</span>
-                                    @error('categoriefinance_id')
+                <!-- Step 3: Tickets et infoline -->
+                <div class="step-content hidden" id="step3-content">
+                    <div class="mb-5">
+                        <h3 class="text-xl font-bold">Informations sur les tickets</h3>
+                        <div id="tickets-container">
+                            <div class="ticket-entry mb-5 p-4 border rounded">
+                                <div class="mb-3">
+                                    <label class="block text-gray-700">Nom du ticket <span
+                                            class="text-red-500">*</span></label>
+                                    <input type="text" name="ticket_type_name[]"
+                                        class="w-full mt-2 p-2 border rounded" maxlength="50" required>
+                                    @error('ticket_type_name')
                                         <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                </label>
-
-                                <label class="flex items-center">
-                                    <input type="radio" id="autres" name="sourcesfinance"
-                                        class="form-radio h-5 w-5 rounded-full text-blue-600"
-                                        value="{{ $sourcefinances[2]->id }}">
-                                    <span class="ml-2">{{ $sourcefinances[2]->name }}</span>
-                                    @error('autres')
+                                </div>
+                                <div class="mb-3">
+                                    <label class="block text-gray-700">Prix du ticket <span
+                                            class="text-red-500">*</span></label>
+                                    <input type="number" name="ticket_type_price[]"
+                                        class="w-full mt-2 p-2 border rounded" required>
+                                    @error('ticket_type_price')
                                         <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                </label>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="block text-gray-700">Quantité de tickets <span
+                                            class="text-red-500">*</span></label>
+                                    <input type="number" name="ticket_type_quantity[]"
+                                        class="w-full mt-2 p-2 border rounded" required>
+                                    @error('ticket_type_quantity')
+                                        <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <label class="block text-gray-700">Quantité réelle de tickets <span
+                                            class="text-red-500">*</span></label>
+                                    <input type="number" name="ticket_type_real_quantity[]"
+                                        class="w-full mt-2 p-2 border rounded" required>
 
+                                    @error('ticket_type_real_quantity')
+                                        <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <label class="block text-gray-700">Description</label>
+                                    <textarea name="ticket_type_description[]" class="w-full mt-2 p-2 border rounded"></textarea>
+                                    @error('ticket_type_description')
+                                        <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
+                        <button type="button" class="bg-green-500 text-white px-4 py-2 rounded"
+                            onclick="addTicketEntry()">Ajouter un autre type de ticket</button>
                     </div>
-                    <div class="w-full md:w-1/2 px-3">
-                        <div class="form-group" id="autre-div" style="display: none;">
-                            <label for="autres">{{ __('Autres') }}</label>
-                            <input type="text" name="autres" class="form-input @error('autres') is-invalid @enderror"
-                                placeholder="Entrez votre source de finance">
-                            @error('autres')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="w-full md:w-1/2 px-3">
-                        <div class="form-group" id="category-div" style="display: none;">
-                            <label for="categoriefinance_id">{{ __('Catégorie de Financement') }}</label>
-                            <select id="categoriefinance_id" name="categoriefinance_id"
-                                class="form-input @error('categoriefinance_id') is-invalid @enderror">
-                                <option value="">{{ __('Sélectionner une catégorie de financement') }}</option>
-                                <!-- Les options seront ajoutées dynamiquement par JavaScript -->
-                            </select>
-                            @error('categoriefinance_id')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+                    <div class="flex justify-between">
+                        <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded"
+                            onclick="previousStep(2)">Précédent</button>
+                        <button type="button" class="bg-red-500 text-white px-4 py-2 rounded"
+                            onclick="nextStep(4)">Suivant</button>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap -mx-3">
-                    <div class="w-full px-3">
-                        <div class="form-group">
-                            <label for="description">{{ __('Description') }}</label>
-                            <textarea name="description" class="form-input @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
-                            @error('description')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
+                <script>
+                    function addTicketEntry() {
+                        const ticketContainer = document.getElementById('tickets-container');
+                        const newTicket = document.createElement('div');
+                        newTicket.classList.add('ticket-entry', 'mb-5', 'p-4', 'border', 'rounded');
+                        newTicket.innerHTML = `
+            <div class="mb-3">
+                <label class="block text-gray-700">Nom du ticket *</label>
+                <input type="text" name="ticket_type_name[]" class="w-full mt-2 p-2 border rounded" maxlength="50" required>
+            </div>
+            <div class="mb-3">
+                <label class="block text-gray-700">Prix du ticket *</label>
+                <input type="number" name="ticket_type_price[]" class="w-full mt-2 p-2 border rounded" required>
+            </div>
+            <div class="mb-3">
+                <label class="block text-gray-700">Quantité de tickets *</label>
+                <input type="number" name="ticket_type_quantity[]" class="w-full mt-2 p-2 border rounded" required>
+            </div>
+             <div class="mb-3">
+                    <label class="block text-gray-700">Quantité réelle de tickets *</label>
+                    <input type="number" name="ticket_type_real_quantity[]" class="w-full mt-2 p-2 border rounded" required>
+                </div>
+            <div class="mb-3">
+                <label class="block text-gray-700">Description</label>
+                <textarea name="ticket_type_description[]" class="w-full mt-2 p-2 border rounded"></textarea>
+            </div>
+        `;
+                        ticketContainer.appendChild(newTicket);
+                    }
+                </script>
+                <div class="step-content hidden" id="step4-content">
+                    <div class="mb-5">
+                        <h3 class="text-2xl font-bold text-gray-800">Vérifiez les informations de l'évènement</h3>
 
-                    <div class="w-full md:w-1/2 px-3">
-                        <div class="form-group">
-                            <label for="ficher_annonce">{{ __('Fichier Annonce') }} <span
-                                    class="text-red-500">*</span></label>
-                            <input type="file" name="ficher_annonce"
-                                class="form-input @error('ficher_annonce') is-invalid @enderror" required>
-                            @error('ficher_annonce')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="w-full md:w-1/2 px-3">
-                        <div class="form-group">
-                            <label for="document_offre">{{ __('Dossier d\'Appel à Concurrence(.zip)') }} <span
-                                    class="text-red-500">*</span></label>
-                            <input type="file" name="document_offre"
-                                class="form-input @error('document_offre') is-invalid @enderror" required>
-                            @error('document_offre')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="w-full md:w-1/2 px-3">
-                        <div class="form-group">
-                            <label for="datetimepicker"
-                                class="block text-gray-700 text-sm font-bold mb-2">{{ __('Date de Clôture') }} <span
-                                    class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <input type="text" id="datetimepicker" name="date_cloture"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                                    placeholder="Sélectionner la date et l'heure" value="{{ old('date_cloture') }}">
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                    <span class="text-gray-500 sm:text-sm">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                                            fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M6 2a1 1 0 00-1 1v1H3a2 2 0 00-2 2v11a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-2V3a1 1 0 00-1-1H6zm0 2V3h8v1H6z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </span>
-                                </div>
+                        <!-- Section de l'image de l'événement -->
+                        <div class="flex items-center mb-5">
+                            <div class="w-1/4 mr-4">
+                                <img id="event-image-preview" class="rounded-lg shadow-md" src="#"
+                                    alt="Image de l'événement" />
                             </div>
-                            @error('date_cloture')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                            <div class="w-3/4">
+                                <h4 class="text-lg font-semibold text-gray-700">Titre de l'événement :</h4>
+                                <p id="verify-event-title" class="text-gray-600"></p>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <h4 class="text-lg font-semibold text-gray-700">Description :</h4>
+                            <p id="verify-event-description" class="text-gray-600"></p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-700">Date & Heure :</h4>
+                                <p id="verify-event-date" class="text-gray-600"></p>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-700">Lieu :</h4>
+                                <p id="verify-event-city" class="text-gray-600"></p>
+                                <p id="verify-event-address" class="text-gray-600"></p>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <h4 class="text-lg font-semibold text-gray-700">Types de tickets :</h4>
+                            <div id="verify-tickets" class="space-y-4"></div>
                         </div>
                     </div>
-                    <div class="w-full md:w-1/2 px-3">
-                        <div class="form-group">
-                            <label for="reference_offre"
-                                class="block text-gray-700 text-sm font-bold mb-2">{{ __('Référence Offre') }} <span
-                                    class="text-red-500">*</span></label>
-                            <input type="text" name="reference_offre"
-                                class="form-input @error('reference_offre') is-invalid @enderror"
-                                value="{{ old('reference_offre') }}" required>
-                            @error('reference_offre')
-                                <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+
+                    <div class="flex justify-between mt-8">
+                        <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                            onclick="previousStep(3)">Précédent</button>
+                        <button type="submit"
+                            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Publier</button>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">{{ __('Ajouter') }}</button>
+                <script>
+                    document.querySelector('input[name="event_title"]').addEventListener('input', function() {
+                        document.getElementById('verify-event-title').textContent = this.value;
+                    });
+
+                    document.querySelector('textarea[name="event_description"]').addEventListener('input', function() {
+                        document.getElementById('verify-event-description').textContent = this.value;
+                    });
+
+                    document.querySelector('input[name="event_date"]').addEventListener('change', function() {
+                        document.getElementById('verify-event-date').textContent = this.value;
+                    });
+
+                    document.querySelector('input[name="event_city"]').addEventListener('input', function() {
+                        document.getElementById('verify-event-city').textContent = this.value;
+                    });
+
+                    document.querySelector('input[name="event_address"]').addEventListener('input', function() {
+                        document.getElementById('verify-event-address').textContent = this.value;
+                    });
+
+                    // Pour les tickets, ajoutez un écouteur d'événement pour chaque champ de ticket
+                    document.querySelectorAll(
+                        'input[name="ticket_type_name[]"], input[name="ticket_type_price[]"],input[name="ticket_type_real_quantity[]"], input[name="ticket_type_quantity[]"], textarea[name="ticket_type_description[]"]'
+                    ).forEach(function(element) {
+                        element.addEventListener('input', updateTicketVerification);
+                    });
+
+                    function updateTicketVerification() {
+                        const ticketContainer = document.getElementById('verify-tickets');
+                        ticketContainer.innerHTML = ''; // Vider le contenu pour le remplir à nouveau
+
+                        const ticketNames = document.querySelectorAll('input[name="ticket_type_name[]"]');
+                        const ticketPrices = document.querySelectorAll('input[name="ticket_type_price[]"]');
+                        const ticketQuantities = document.querySelectorAll('input[name="ticket_type_quantity[]"]');
+                        const ticketRealQuantities = document.querySelectorAll('input[name="ticket_type_real_quantity[]"]');
+                        const ticketDescriptions = document.querySelectorAll('textarea[name="ticket_type_description[]"]');
+
+                        ticketNames.forEach((_, index) => {
+                            const ticketBlock = document.createElement('div');
+                            ticketBlock.classList.add('p-4', 'bg-gray-100', 'rounded-lg', 'shadow-sm');
+                            ticketBlock.innerHTML = `
+                <h5 class="text-md font-semibold text-gray-700">Nom du ticket :</h5>
+                <p class="text-gray-600">${ticketNames[index].value}</p>
+                <h5 class="text-md font-semibold text-gray-700">Prix :</h5>
+                <p class="text-gray-600">${ticketPrices[index].value} F CFA</p>
+                <h5 class="text-md font-semibold text-gray-700">Quantité :</h5>
+                <p class="text-gray-600">${ticketQuantities[index].value}</p>
+                 <h5 class="text-md font-semibold text-gray-700">Quantité réelle de tickets :</h5>
+                <p class="text-gray-600">${ticketRealQuantities[index].value}</p>
+                <h5 class="text-md font-semibold text-gray-700">Description :</h5>
+                <p class="text-gray-600">${ticketDescriptions[index].value}</p>
+            `;
+                            ticketContainer.appendChild(ticketBlock);
+                        });
+                    }
+
+                    // Gestion de l'affichage de l'image
+                    document.querySelector('input[name="event_image"]').addEventListener('change', function(event) {
+                        const reader = new FileReader();
+                        reader.onload = function() {
+                            document.getElementById('event-image-preview').src = reader.result;
+                        };
+                        reader.readAsDataURL(event.target.files[0]);
+                    });
+                </script>
+
             </form>
         </div>
     </div>
-    <!-- Ajoutez ceci dans votre section head -->
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            ClassicEditor
-                .create(document.querySelector('#corps_annonce'))
-                .catch(error => {
-                    console.error(error);
-                });
-        });
-    </script>
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialisation du sélecteur de date
-            flatpickr("#datetimepicker", {
-                enableTime: true,
-                dateFormat: "Y-m-d H:i", // Format 24 heures
-                time_24hr: true
-            });
+        function nextStep(step) {
+            document.querySelectorAll('.step-content').forEach(content => content.classList.add('hidden'));
+            document.getElementById(`step${step}-content`).classList.remove('hidden');
+            updateStepIndicator(step);
+        }
 
-            // Initialisation de la gestion des sources de financement
-            const sourcesFinanceRadios = document.querySelectorAll('input[name="sourcesfinance"]');
-            const autresDiv = document.getElementById('autre-div');
-            const categoryDiv = document.getElementById('category-div');
-            const categorieSelect = document.getElementById('categoriefinance_id');
+        function previousStep(step) {
+            nextStep(step);
+        }
 
-            sourcesFinanceRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    autresDiv.style.display = 'none';
-                    categoryDiv.style.display = 'none';
-
-                    if (this.id === 'sourcesfinance_id') {
-                        categoryDiv.style.display = 'block';
-                        fetchCategories(this.value);
-                    } else if (this.id === 'autres') {
-                        autresDiv.style.display = 'block';
-                    }
-                });
-            });
-
-            function fetchCategories(sourceId) {
-                categorieSelect.innerHTML =
-                    '<option value="">{{ __('Sélectionner une catégorie de financement') }}</option>';
-
-                if (sourceId) {
-                    fetch(`/api/categories/${sourceId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.categorie.forEach(function(categorie) {
-                                var option = document.createElement('option');
-                                option.value = categorie.id;
-                                option.textContent = categorie.name;
-                                categorieSelect.appendChild(option);
-                            });
-                        });
+        function updateStepIndicator(step) {
+            document.querySelectorAll('.step-item').forEach((indicator, index) => {
+                const stepNumber = index + 1;
+                if (stepNumber <= step) {
+                    indicator.querySelector('.step-number').classList.remove('bg-gray-300', 'text-gray-600');
+                    indicator.querySelector('.step-number').classList.add('bg-red-500', 'text-white');
+                    indicator.querySelector('.step-label').classList.remove('text-gray-600');
+                    indicator.querySelector('.step-label').classList.add('text-red-500');
+                } else {
+                    indicator.querySelector('.step-number').classList.add('bg-gray-300', 'text-gray-600');
+                    indicator.querySelector('.step-number').classList.remove('bg-red-500', 'text-white');
+                    indicator.querySelector('.step-label').classList.add('text-gray-600');
+                    indicator.querySelector('.step-label').classList.remove('text-red-500');
                 }
-            }
-        });
+            });
+        }
     </script>
-
 @endsection

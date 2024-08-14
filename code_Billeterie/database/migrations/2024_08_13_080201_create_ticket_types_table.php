@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('ticket_types', function (Blueprint $table) {
             $table->id('ticket_type_id');
-            $table->foreignId('ticket_type_event_id')->constrained('events', 'event_id');
+            $table->foreignId('ticket_type_event_id')
+                ->constrained('events', 'event_id')
+                ->onDelete('cascade') // Supprime les types de tickets associés si l'événement est supprimé
+                ->onUpdate('cascade'); // Met à jour les types de tickets associés si l'événement est mis à jour
             $table->string('ticket_type_name', 50);
             $table->mediumInteger('ticket_type_price');
             $table->integer('ticket_type_quantity');

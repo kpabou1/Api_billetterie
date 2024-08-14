@@ -3,15 +3,45 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Annonce;
-use App\Models\Categoriefinance;
-use App\Models\Sourcefinance;
+
+use App\Models\Event;
+use App\Models\TicketType;
 
 use Exception;
 
 class FaonctionExterneController extends Controller
 {
  
+    public function welcome()
+    {
+        // Récupération de tous les événements
+        $events = Event::orderBy('created_at', 'desc')->paginate(9);
+
+        return view('Aceuil.welcome', compact('events'));
+    }
+
+    public function listeEvents()
+    {
+        // Récupération de tous les événements
+        $events = Event::orderBy('created_at', 'desc')->paginate(9);
+
+        return view('Aceuil.welcome_events', compact('events'));
+    }
+
+
+    // TicketController.php
+    public function showPaymentPage($ticketId, Request $request)
+    {
+    
+      //  dd("En cours de taff");
+        dd($request);
+        $ticket = TicketType::findOrFail($ticketId);
+        return view('payment.show', compact('ticket'));
+    }
+
+    
+
+
 
 
 
@@ -35,102 +65,6 @@ class FaonctionExterneController extends Controller
 
     
 
-public function filter_annonce(Request $request)
-{
-    try {
-        \Log::info('filter_annonce called with parameters', $request->all());
-
-        $query = Annonce::query();
-
-        if ($request->has('sourceFinancement')) {
-            \Log::info('Filtering by sourceFinancement: ' . $request->sourceFinancement);
-            $query->where('sourcesfinance_id', $request->sourceFinancement);
-        }
-        if ($request->has('categorieFinancement')) {
-            \Log::info('Filtering by categorieFinancement: ' . $request->categorieFinancement);
-            $query->where('categorie_source_id', $request->categorieFinancement);
-        }
-
-        if ($request->has('autreSource') && !empty($request->autreSource)) {
-            \Log::info('Filtering by autreSource: ' . $request->autreSource);
-            $query->where('autres_source', 'LIKE', '%' . $request->autreSource . '%');
-        }
-
-        if ($request->has('datePublication')) {
-            \Log::info('Filtering by datePublication: ' . $request->datePublication);
-            switch ($request->datePublication) {
-                case '1mois':
-                    $query->where('created_at', '>=', now()->subMonth());
-                    break;
-                case '3mois':
-                    $query->where('created_at', '>=', now()->subMonths(3));
-                    break;
-                case '1ans':
-                    $query->where('created_at', '>=', now()->subYear());
-                    break;
-               
-                default:
-                    \Log::warning('Unknown datePublication filter: ' . $request->datePublication);
-            }
-        }
-         // Filtrage par date de clôture
-        if ($request->has('date_cloture')) {
-            $query->whereDate('date_cloture', '>=', $request->date_cloture);
-        }
-        
-
-        if ($request->has('nom_autorite_contractante') && !empty($request->nom_autorite_contractante)) {
-            \Log::info('Filtering by nom_autorite_contractante: ' . $request->nom_autorite_contractante);
-            $query->where('nom_autorite_contractante', 'LIKE', '%' . $request->nom_autorite_contractante . '%');
-        }
-
-        $annonces = $query->orderBy('created_at', 'desc')->get();
-
-        \Log::info('Annonces retrieved successfully', ['count' => $annonces->count()]);
-
-        return response()->json($annonces);
-    } catch (\Exception $e) {
-        \Log::error('Error in filter_annonce: ' . $e->getMessage());
-        return response()->json(['error' => 'An error occurred while fetching annonces.'], 500);
-    }
-}
-
-
-    public function getAnnonces()
-    {
-        $annonces = Annonce::all();
-        $data = [
-            'annonces' => $annonces,
-            'reponse' => 'Liste des annonces'
-        ];
-        return response()->json($data);
-
-    }
-
-    public function getCategories(){
-        $categories = Categoriefinance::all();
-       // $categories = Categoriefinance::where('sourcesfinance_id', $id)->get();
-        $data = [
-            'categories' => $categories,
-            'reponse' => 'Liste des catégories'
-        ];
-        return response()->json($data);
-    
-    }
-
-    public function getCategoryFind($id){
-       // $categorie = Categoriefinance::find($id);
-        $categories = Categoriefinance::where('sourcesfinance_id', $id)->get();
-
-        if (!$categories) {
-            return response()->json(['message' => 'Categorie not found'], 404);
-        }
-        $data = [
-            'categorie' => $categories,
-            'reponse' => 'Catégorie trouvée'
-        ];
-        return response()->json($data);
-    }
 
 
     public function showAnnonce(string $id)

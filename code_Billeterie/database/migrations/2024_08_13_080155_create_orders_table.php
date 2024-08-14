@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id('order_id');
             $table->string('order_number', 50)->unique();
-            $table->foreignId('order_event_id')->constrained('events', 'event_id');
+            $table->foreignId('order_event_id')
+                ->constrained('events', 'event_id')
+                ->onDelete('cascade') // Supprime les commandes associées si l'événement est supprimé
+                ->onUpdate('cascade'); // Met à jour les commandes associées si l'événement est mis à jour
             $table->mediumInteger('order_price');
             $table->string('order_type', 50);
             $table->string('order_payment', 100);
