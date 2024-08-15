@@ -27,3 +27,7 @@
 #24 /home/isidoredev/Documents/doc-important/Tikermas_entretiens/code/New/Api_billetterie/code_Billeterie/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle()
 #25 {main}
 "} 
+[2024-08-15 13:58:14] local.INFO: filter_evenements called with parameters  
+[2024-08-15 13:58:14] local.INFO: Events retrieved successfully {"count":1} 
+[2024-08-15 13:58:50] local.INFO: filter_evenements called with parameters  
+[2024-08-15 13:58:51] local.INFO: Events retrieved successfully {"count":1} 
