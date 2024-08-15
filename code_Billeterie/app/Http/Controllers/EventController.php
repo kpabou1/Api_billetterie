@@ -87,8 +87,7 @@ class EventController extends Controller
             'ticket_type_quantity.*' => 'required|integer',
             'ticket_type_description' => 'nullable|array',
             'ticket_type_description.*' => 'nullable|string',
-            'ticket_type_real_quantity' => 'required|array',
-            'ticket_type_real_quantity.*' => 'required|integer',
+           
         ]);
 
         // Handle file upload
@@ -102,7 +101,6 @@ class EventController extends Controller
         $event_status = $event_date->isPast() ? 'completed' : 'upcoming';
         $validatedData['event_status'] = $event_status;
 
-        //dd($request);
 
         // Create event
         $event = Event::create($validatedData);
@@ -110,7 +108,7 @@ class EventController extends Controller
         //calucul de la spmmes des deux quantité   ticket_type_real_quantity + ticket_type_real_quantity
 
         // Calcul de la quantité totale de tickets
-        $total_quantity = array_sum($validatedData['ticket_type_real_quantity']);
+       // $total_quantity = $validatedData['ticket_type_real_quantity'];
 
         // Create ticket types
         foreach ($validatedData['ticket_type_name'] as $index => $name) {
@@ -119,8 +117,8 @@ class EventController extends Controller
                 'ticket_type_price' => $validatedData['ticket_type_price'][$index],
                 'ticket_type_quantity' => $validatedData['ticket_type_quantity'][$index],
                 'ticket_type_description' => $validatedData['ticket_type_description'][$index] ?? '',
-                'ticket_type_real_quantity' => $validatedData['ticket_type_real_quantity'][$index],
-                'ticket_type_total_quantity' => $validatedData['ticket_type_real_quantity'][$index], // Calcul correct de la quantité totale
+                'ticket_type_real_quantity' => $validatedData['ticket_type_quantity'][$index],
+                'ticket_type_total_quantity' => $validatedData['ticket_type_quantity'][$index], // Calcul correct de la quantité totale
             ]);
         }
 
@@ -194,7 +192,6 @@ class EventController extends Controller
       
         $event = Event::findOrFail($id);
         $event->delete();
-      //  dd('a');
 
         return redirect()->route('events_billets.index')->with('success', 'Événement supprimé avec succès');
     }

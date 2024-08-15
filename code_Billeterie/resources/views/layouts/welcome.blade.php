@@ -85,11 +85,9 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Événements</a>
+                        <a class="nav-link" href="{{ route('listeevents') }}">Événements</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Ressources</a>
-                    </li>
+                    
                     @if (Route::has('login'))
                     <li class="nav-item">
                         @auth

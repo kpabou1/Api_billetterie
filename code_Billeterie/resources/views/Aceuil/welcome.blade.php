@@ -29,8 +29,10 @@
             </div>
             <!-- Bouton Voir Plus d'Événements -->
             <div class="text-center mt-4">
-                <a href="#" class="btn btn-secondary">Voir plus d'événements</a>
+                <a href="{{ route('listeevents') }}" class="btn btn-secondary">Voir plus d'événements</a>
             </div>
         </div>
+          <!-- saut de 6 lignes -->
+    <div style="margin-top: 20em;"></div>
     </section>
 @endsection

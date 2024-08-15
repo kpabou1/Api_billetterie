@@ -6,10 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use App\Models\Vendeur;
-use App\Models\Acheteur;
-use App\Models\Gerant;
-use App\Models\Magasinier;
+
 use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
 use App\Models\User;
