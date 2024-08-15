@@ -35,7 +35,6 @@ class UserSeeder extends Seeder
             $role = Role::create(['name' => 'Developpeur']);
 
             $permissions = Permission::pluck('id','id')->all();
-           // dd($permissions);
 
 
             $role->syncPermissions($permissions);
@@ -46,9 +45,6 @@ class UserSeeder extends Seeder
 
 
 
-
-            //create 1 vendeur
-            //recupérion de l'id de l'utilisateur de l'user créé
 
 
 

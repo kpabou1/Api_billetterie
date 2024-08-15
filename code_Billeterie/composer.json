@@ -9,6 +9,7 @@
         "barryvdh/laravel-dompdf": "^2.2",
         "botman/botman": "^2.8",
         "botman/driver-web": "^1.5",
+        "dedoc/scramble": "^0.11.10",
         "guzzlehttp/guzzle": "^7.2",
         "ismaelw/laratex": "^1.2",
         "laravel/framework": "^10.10",

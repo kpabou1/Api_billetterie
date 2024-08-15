@@ -209,11 +209,11 @@
                                         </div>
                                     @enderror
                                 </div>
-                                <div class="mb-3">
+                                <div class="mb-3"hidden>
                                     <label class="block text-gray-700">Quantité réelle de tickets <span
                                             class="text-red-500">*</span></label>
                                     <input type="number" name="ticket_type_real_quantity[]"
-                                        class="w-full mt-2 p-2 border rounded" required>
+                                        class="w-full mt-2 p-2 border rounded" >
 
                                     @error('ticket_type_real_quantity')
                                         <div class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded">
@@ -221,7 +221,7 @@
                                         </div>
                                     @enderror
                                 </div>
-                                <div class="mb-3">
+                                <div class="mb-3" >
                                     <label class="block text-gray-700">Description</label>
                                     <textarea name="ticket_type_description[]" class="w-full mt-2 p-2 border rounded"></textarea>
                                     @error('ticket_type_description')
@@ -261,9 +261,9 @@
                 <label class="block text-gray-700">Quantité de tickets *</label>
                 <input type="number" name="ticket_type_quantity[]" class="w-full mt-2 p-2 border rounded" required>
             </div>
-             <div class="mb-3">
+             <div class="mb-3" hidden>
                     <label class="block text-gray-700">Quantité réelle de tickets *</label>
-                    <input type="number" name="ticket_type_real_quantity[]" class="w-full mt-2 p-2 border rounded" required>
+                    <input type="number" name="ticket_type_real_quantity[]" class="w-full mt-2 p-2 border rounded" >
                 </div>
             <div class="mb-3">
                 <label class="block text-gray-700">Description</label>

@@ -67,6 +67,11 @@ class RegisteredUserController extends Controller
         $pass=substr($request->firstname,0,2).substr($request->lastname,0,2);
         $pass=$pass.$random;
         $username=substr($request->firstname,0,2).$request->lastname;
+        //if username existe dans la base user redirect back l'user existe 
+        $user = User::where('username', $username)->first();
+        if ($user) {
+            return back()->withErrors(['error' => 'Ce nom d\'utilisateur est déjà utilisé. Veuillez en choisir un autre.']);
+        }
         $infos = [
             'password' => $pass,
             'username' => $username,
@@ -79,7 +84,7 @@ class RegisteredUserController extends Controller
         try {
             Mail::send('emails.accuser_ouverture', ['infos' => $infos], function ($message) use ($request) {
                 $message->to($request->email)
-                    ->subject('Code de vérification');
+                    ->subject('Accusé de Réception d\'Ouverture de Compte');
             });
         } catch (\Swift_TransportException $e) {
             // Erreur liée à l'envoi de l'email (problème de domaine, serveur de messagerie, etc.)
@@ -100,8 +105,7 @@ class RegisteredUserController extends Controller
         $user->telephone=$request->phone_number;
         $user->email=$request->email;
         $user->password=Hash::make($pass);
-       // dd($request->country_code);
-       // dd($user);
+
         $user->save();
         $particlier_role = Role::where('name', 'UserClient')->first();
         //assignation du role particulier

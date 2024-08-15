@@ -13,7 +13,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Order::with('event'); // Assuming you have a relationship with the Event model
+            $data = Order::with('event'); 
 
             if ($request->filled('from_date') && $request->filled('to_date')) {
                 $fromDate = Carbon::createFromFormat('Y-m-d', $request->from_date)->startOfDay();

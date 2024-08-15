@@ -39,16 +39,7 @@ class AuthenticatedSessionController extends Controller
            // dd($user_tout);
         }
 
-        //dd($username);
-        //ajout du username dans la session
-        //recupération du firstname et du lastname
-       // $user = Auth::user();
-       // dd($user);
-       // $first_name=$user->first_name;
-       // $last_name=$user->last_name;
-        //ajout du firstname et du lastname dans la session
-        //$request->session()->put('first_name', $first_name);
-       // $request->session()->put('last_name', $last_name);
+       
 
         $request->authenticate();
 
