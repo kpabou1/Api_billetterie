@@ -17,6 +17,13 @@ use Exception;
 
 class FaonctionExterneController extends Controller
 {
+    public function __construct()
+    {
+    $this->middleware('permission:events-list|events-create|events-edit|events-delete', ['only' => ['index','show']]);
+    $this->middleware('permission:events-create', ['only' => ['showPaymentPage','processPaymentInfo']]);
+    $this->middleware('permission:events-edit', ['only' => ['edit','update']]);
+    $this->middleware('permission:events-delete', ['only' => ['destroy']]);
+    }
  
     public function welcome()
     {
@@ -36,10 +43,10 @@ class FaonctionExterneController extends Controller
 
 
     // TicketController.php
+    //cette fontion affiche le formulaire de remplissage de l'intention de déclanché une commande
     public function showPaymentPage($ticketId, Request $request)
     {
     
-      //  dd("En cours de taff");
         $tickets = TicketType::where('ticket_type_id', $ticketId)->get();
         
         //recupéraion de ticket_type_event_id
@@ -51,6 +58,7 @@ class FaonctionExterneController extends Controller
       
     }
     //processPaymentInfo
+    //je déclanche l'intention de payement ( intention de passé la commande après  le formulaire) 
     public function processPaymentInfo(Request $request)
     {    
         
@@ -76,7 +84,15 @@ class FaonctionExterneController extends Controller
 
         // Affectez la date formatée (Y-m-d H:i:s) à une variable
         $expirationFormatted = $expiration->format('Y-m-d H:i:s');
-
+          //je vérifie si la quantité est supérieur à 0 avant de faire la soustraction puisque ce qui varie une fois le payement confirmé est ticket_type_total_quantity
+          if ($ticket->ticket_type_total_quantity >= $ticket_quantity) {
+           
+            $ticket->ticket_type_real_quantity = $ticket->ticket_type_real_quantity - $ticket_quantity;
+            $ticket->save();
+            } else {
+                //je renvoie un message d'erreur
+                return redirect()->back()->with('notification',['type' => 'danger', 'message' =>  'La quantité de ticket disponible est insuffisante']);
+            }
         $orderIntent = new OrderIntent();
         //je remplie les champs
         $orderIntent->user_email = $email;
@@ -88,6 +104,9 @@ class FaonctionExterneController extends Controller
         //je sauvegarde
         $orderIntent->save();
         $orderIntentId=$orderIntent->order_intent_id;
+        //dans la table TicketType je réduit l'ancienne  quantité ticket_type_real_quantity  - la quantité payé
+      
+        
         //jajoute dans la session le nombre de tickets choisie et le et le num ticket
        // $request->session()->put('orderIntentId', $orderIntent->order_intent_id);
         //$request->session()->put('ticket_quantity', $ticket_quantity);
@@ -106,6 +125,8 @@ class FaonctionExterneController extends Controller
 
 
     }
+
+    //cette fonction affiche le formulaire de remplissage de l'intention de payement après déclanchement
     public function showPaymentConfirmPage($ticketId, Request $request,$ticket_quantity, $orderIntentId)
     {
         
@@ -129,6 +150,9 @@ class FaonctionExterneController extends Controller
 
 
 
+    //cette fonction ce charge d'enregistrer la confrimation de commande une fois l'enregistrement effectué il est redirigé vers le pdf ticket
+
+
     public function processPaymentConfirm(Request $request)
     {
       
@@ -140,6 +164,17 @@ class FaonctionExterneController extends Controller
         $orderIntent = OrderIntent::findOrFail($orderIntentId);
         //préparation de l'enregistrement du payement
         //génération d'un unique de 9 chiffre et lettre tout en vérifiant dans la table oders
+        //je vérifie si la quantité est supérieur à 0 avant de faire la soustraction puisque ce qui varie une fois le payement confirmé est ticket_type_total_quantity modele ticket
+        if ($ticket->ticket_type_total_quantity >= $orderIntent->order_intent_quantity) {
+           
+            $ticket->ticket_type_total_quantity = $ticket->ticket_type_real_quantity - $orderIntent->order_intent_quantity;
+            $ticket->save();
+            } else {
+                //je renvoie un message d'erreur
+                return redirect()->back()->with('notification',['type' => 'danger', 'message' =>  'La quantité de ticket disponible est insuffisante']);
+            }
+
+
        
         do {
             $key = Str::random(9);

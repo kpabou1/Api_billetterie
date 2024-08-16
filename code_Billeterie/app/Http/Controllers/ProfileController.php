@@ -13,9 +13,17 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
+    public function __construct()
+    {
+    $this->middleware('permission:events-list|events-create|events-edit|events-delete', ['only' => ['index','show']]);
+    $this->middleware('permission:events-create', ['only' => ['create','store']]);
+    $this->middleware('permission:events-edit', ['only' => ['edit','update']]);
+    $this->middleware('permission:events-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display the user's profile form.
      */
+
     public function edit(Request $request): View
     {
       //  dd($request->user());

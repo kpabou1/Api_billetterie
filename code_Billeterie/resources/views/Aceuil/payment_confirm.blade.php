@@ -19,6 +19,31 @@
         <!-- Section Gauche : Formulaire -->
         <div class="col-md-6">
             <div class="card">
+                @if ($notification = Session::get('notification'))
+                @if ($notification['type'] === 'success')
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <p class="mb-0">{{ $notification['message'] }}</p>
+                    </div>
+                @elseif ($notification['type'] === 'warning')
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <p class="mb-0">{{ $notification['message'] }}</p>
+                    </div>
+
+                @elseif ($notification['type'] === 'danger')
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <p class="mb-0">{{ $notification['message'] }}</p>
+                    </div>
+                @endif
+            @endif
                 <div class="card-body">
                     <h5 class="card-title text-center">Informations de Paiement</h5>
                     <form id="paymentForm" action="{{ route('payment.confirm') }}" method="POST">
