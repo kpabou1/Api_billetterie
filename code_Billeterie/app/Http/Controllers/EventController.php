@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-//Event
+//Event TicketType
+use App\Models\TicketType;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -21,7 +23,9 @@ class EventController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Event::query();
+            // Charger les événements avec les types de tickets
+            $data = Event::with('ticketTypes');
+            //je fais une association avec la tables des tickets pour l'intention de recupérer la sommes de chaque types de ticket 
     
             if ($request->filled('from_date') && $request->filled('to_date')) {
                 $fromDate = Carbon::createFromFormat('Y-m-d', $request->from_date)->startOfDay();
@@ -31,11 +35,20 @@ class EventController extends Controller
             }
     
             return DataTables::of($data)
+                ->addColumn('ticket_type_quantity', function ($row) {
+                    return $row->ticketTypes->pluck('ticket_type_quantity')->first();
+                })
+                ->addColumn('ticket_type_real_quantity', function ($row) {
+                    return $row->ticketTypes->pluck('ticket_type_real_quantity')->first();
+                })
+                ->addColumn('ticket_type_total_quantity', function ($row) {
+                    return $row->ticketTypes->pluck('ticket_type_total_quantity')->first();
+                })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('events_billets.edit', $row->event_id);
                     $showUrl = route('events_billets.show', $row->event_id);
                     $deleteUrl = route('events_billets.destroy', $row->event_id);
-                    
+    
                     return '
                         <div class="d-flex gap-2">
                             <a href="'.$editUrl.'" class="btn btn-sm btn-outline-info">
@@ -61,6 +74,8 @@ class EventController extends Controller
     
         return view('events.index');
     }
+    
+    
     
     public function create()
     {

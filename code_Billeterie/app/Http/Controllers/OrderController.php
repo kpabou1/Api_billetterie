@@ -9,6 +9,13 @@ use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+    $this->middleware('permission:commandes-list|commandes-create|commandes-edit|commandes-delete', ['only' => ['index','show']]);
+    $this->middleware('permission:commandes-create', ['only' => ['create','store']]);
+    $this->middleware('permission:commandes-edit', ['only' => ['edit','update']]);
+    $this->middleware('permission:commandes-delete', ['only' => ['destroy']]);
+    }
     //
     public function index(Request $request)
     {
